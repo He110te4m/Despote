@@ -16,7 +16,7 @@ class AutoLoad
     public static function register()
     {
         // 加载映射表
-        self::$classMap = require PATH_DESPOTE . '/conf/autoload.php';
+        self::$classMap = require PATH_CONF . 'autoload.php';
         spl_autoload_register(['\despote\kernel\AutoLoad', 'loadByPSR4']);
         spl_autoload_register(['\despote\kernel\AutoLoad', 'loadByConf']);
     }
