@@ -26,14 +26,17 @@ class Router extends Service
 
     protected function init()
     {
-        if (empty($this->host)) {
-            $this->parse();
-        } else {
+        if (!empty($this->host)) {
+            // 域名绑定校验
             $host = Despote::request()->getHost();
             if (!isset($this->host[$host])) {
                 throw new \Exception("Access Forbidden", 403);
+                return;
             }
         }
+        // 校验通过，开始解析
+        $this->parse();
+        $this->loadCtrl();
     }
 
     public function parse()
@@ -58,15 +61,52 @@ class Router extends Service
             $key = array_shift($pathInfo);
             $val = array_shift($pathInfo);
             // 防止参数个数为奇数，即只有键名没有键值的情况
-            $_GET[$key] = $value === null ? '' : $value;
+            $_GET[$key] = $val === null ? '' : $val;
         }
 
         $this->router = [
-            'module'     => $module,
-            'controller' => $controller,
+            'module'     => ucfirst($module),
+            'controller' => ucfirst($controller),
             'action'     => $action,
         ];
 
         Despote::request()->load($_GET);
+    }
+
+    public function getModule()
+    {
+        return isset($this->router['module']) ? $this->router['module'] : $this->module;
+    }
+
+    public function getCtrl()
+    {
+        return isset($this->router['controller']) ? $this->router['controller'] : $this->controller;
+    }
+
+    public function getAction()
+    {
+        return isset($this->router['action']) ? $this->router['action'] : $this->action;
+    }
+
+    private function loadCtrl()
+    {
+        // 获取控制器对应的类
+        $class = '\app\\' . $this->getModule() . '\controller\\' . $this->getCtrl();
+
+        // 反射获取 action 的参数并将值存在数组中
+        $obj   = new \ReflectionClass($class);
+        $func  = $obj->getMethod($this->getAction());
+        $parms = [];
+        foreach ($func->getParameters() as $parm) {
+            $val = Despote::request()->get($parm->name, false);
+            if ($val) {
+                $parms[$parm->name] = $val;
+            } else {
+                $parms[$parm->name] = null;
+            }
+        }
+
+        // 实例化控制器并调用 action
+        call_user_func_array([new $class(), $this->getAction()], $parms);
     }
 }
