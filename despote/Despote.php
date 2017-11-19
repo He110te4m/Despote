@@ -15,6 +15,7 @@ class Despote
         Event::trigger('tick', '框架运行');
         // 开始核心方法
         self::initCore();
+        // 统计最终运行时间
         Event::trigger('tick', '框架运行');
     }
 
@@ -25,22 +26,19 @@ class Despote
 
         // 根据配置文件批量注册事件
         foreach ($conf as $event) {
-            // 去除非法配置
+            // 对配置项进行处理
             if (!isset($event['name']) || !isset($event['callback'])) {
                 continue;
             }
+            $only = isset($event['only']) ? $event['only'] : false;
+
             // 添加事件
-            Event::listen($event['name'], $event['callback']);
+            Event::hook($event['name'], $event['callback'], $only);
         }
     }
 
     public static function initCore()
     {
         // singleton
-    }
-
-    public static function test()
-    {
-        echo "测试调用静态方法成功";
     }
 }

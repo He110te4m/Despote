@@ -16,6 +16,4 @@ require 'despote/init.php';
 require 'despote/kernel/Autoload.php';
 \despote\kernel\Autoload::register();
 
-// 事件触发：统计时间
-// 事件触发：统计内存占用
 Despote::run();

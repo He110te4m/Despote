@@ -1,3 +1,7 @@
 <?php
 
-return [];
+return [
+    'router' => [
+        'class' => '\despote\kernel\Router',
+    ],
+];
