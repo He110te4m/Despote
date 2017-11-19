@@ -23,3 +23,5 @@ define('PATH_BASE', PATH_DESPOTE . 'base' . DS);
 define('PATH_CONF', PATH_DESPOTE . 'conf' . DS);
 // 框架核心文件目录
 define('PATH_KERNEL', PATH_DESPOTE . 'kernel' . DS);
+// 定义运行目录
+define('PATH_APP', PATH_ROOT . 'app' . DS);
