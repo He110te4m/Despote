@@ -17,11 +17,11 @@ class Despote
         // 注册必要事件
         self::initEvent();
         // 统计现在的资源占用信息，方便在过程中获取
-        Event::trigger('tick', '框架运行');
+        Event::trigger('TICK', '框架运行');
         // 开始核心方法
         self::initCore();
         // 统计最终运行时间
-        Event::trigger('tick', '框架运行');
+        Event::trigger('TICK', '框架运行');
     }
 
     /**
@@ -54,11 +54,12 @@ class Despote
         // 必备服务，不管配置文件是否加载都需要加载的文件
         $core = [
             'request' => '\despote\kernel\Request',
+            'router'  => '\despote\kernel\Router',
         ];
         // 加载系统服务
         self::$services = array_merge($core, $services);
         // 开始路由分发
-        self::router();
+        self::router()->loadCtrl();
     }
 
     /**
@@ -76,6 +77,7 @@ class Despote
             if (is_array(self::$services[$id])) {
                 // 如果是数组，直接获取类名
                 $class = self::$services[$id]['class'];
+                // echo $class . '<br>';
                 // 去除类名，表示已经初始化过了
                 unset(self::$services[$id]['class']);
                 // 初始化服务并丢到对象池中
@@ -84,7 +86,7 @@ class Despote
                 // 如果不是数组，就没有配置项，直接创建
                 self::$instances[$id] = new self::$services[$id]();
             }
-            // 返回初始化好的服务对象
+
             return self::$instances[$id];
         } else {
             // 没有注册服务直接抛出异常

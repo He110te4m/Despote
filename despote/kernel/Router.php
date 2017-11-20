@@ -26,17 +26,15 @@ class Router extends Service
 
     protected function init()
     {
-        if (!empty($this->host)) {
+        // echo "路由成功加载<br>";
+        $host = Despote::request()->getHost();
+        if (!empty($this->host) && !isset($this->host[$host])) {
             // 域名绑定校验
-            $host = Despote::request()->getHost();
-            if (!isset($this->host[$host])) {
-                throw new \Exception("Access Forbidden", 403);
-                return;
-            }
+            throw new \Exception("Access Forbidden", 403);
+            return;
         }
-        // 校验通过，开始解析
+        // 校验通过，开始解析 URL
         $this->parse();
-        $this->loadCtrl();
     }
 
     public function parse()
@@ -49,10 +47,10 @@ class Router extends Service
         $path = trim(preg_replace('/^(\/)?index\.php/i', '', $path, 1), '/');
         // 获取 GET 参数
         parse_str(isset($urlInfo['query']) ? $urlInfo['query'] : '', $_GET);
-        // echo $path;
 
-        $pathInfo   = explode('/', $path);
-        $module     = $this->bindModule ? $this->module : array_shift($pathInfo);
+        // 路由匹配
+        $pathInfo   = empty($path) ? [] : explode('/', $path);
+        $module     = ($this->bindModule || empty($pathInfo)) ? $this->module : array_shift($pathInfo);
         $controller = empty($pathInfo) ? $this->controller : array_shift($pathInfo);
         $action     = empty($pathInfo) ? $this->action : array_shift($pathInfo);
 
@@ -71,6 +69,7 @@ class Router extends Service
         ];
 
         Despote::request()->load($_GET);
+//        echo Despote::router()->getModule();  //TODO 无限循环
     }
 
     public function getModule()
@@ -88,25 +87,21 @@ class Router extends Service
         return isset($this->router['action']) ? $this->router['action'] : $this->action;
     }
 
-    private function loadCtrl()
+    public function loadCtrl()
     {
         // 获取控制器对应的类
         $class = '\app\\' . $this->getModule() . '\controller\\' . $this->getCtrl();
 
-        // 反射获取 action 的参数并将值存在数组中
-        $obj   = new \ReflectionClass($class);
-        $func  = $obj->getMethod($this->getAction());
-        $parms = [];
-        foreach ($func->getParameters() as $parm) {
-            $val = Despote::request()->get($parm->name, false);
-            if ($val) {
-                $parms[$parm->name] = $val;
-            } else {
-                $parms[$parm->name] = null;
-            }
-        }
+        // // 反射获取 action 的参数并将值存在数组中
+        // $obj    = new \ReflectionClass($class);
+        // $func   = $obj->getMethod($this->getAction());
+        $params = [];
+        // foreach ($func->getParameters() as $param) {
+        //     $val                  = Despote::request()->get($param->name, false);
+        //     $params[$param->name] = $val === false ? '' : $val;
+        // }
 
         // 实例化控制器并调用 action
-        call_user_func_array([new $class(), $this->getAction()], $parms);
+        call_user_func_array([new $class(), $this->getAction()], $params);
     }
 }

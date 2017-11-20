@@ -2,12 +2,17 @@
 
 namespace app\Home\controller;
 
-// class Index extends Controller
-class Index
+use \despote\base\Controller;
+
+class Index extends Controller
 {
-    public function index($test)
+    public function index()
     {
-        echo "测试 action 加载<br>";
-        echo "test:" . $test;
+        $this->render('', [], 'default.php');
+    }
+
+    public function home()
+    {
+        echo "我是 home";
     }
 }

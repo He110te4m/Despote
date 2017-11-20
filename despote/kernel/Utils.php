@@ -75,4 +75,21 @@ class Utils
 
         return $useMemory;
     }
+
+    ///////////////////
+    // 堆栈调试工具函数 //
+    ///////////////////
+
+    private static $id;
+
+    public static function begin()
+    {
+        self::$id = mt_rand();
+        echo self::$id . '开始';
+    }
+
+    public static function end()
+    {
+        echo self::$id . "结束";
+    }
 }
