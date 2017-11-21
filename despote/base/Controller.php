@@ -13,9 +13,14 @@
 
 namespace despote\base;
 
-class Controller
+class Controller extends Service
 {
     protected $view;
+
+    protected function init()
+    {
+        // 注册 beforeAction 和 afterAction 事件
+    }
 
     private function getView()
     {

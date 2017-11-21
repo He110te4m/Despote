@@ -7,21 +7,13 @@
  *   |____/ \___||___/ .__/ \___/ \__\___|
  *                   |_|
  * @author      He110 (i@he110.top)
- * @namespace   app\Home\controller
+ * @namespace   despote\kernel
  */
-namespace app\Home\controller;
 
-use \despote\base\Controller;
+namespace despote\kernel;
 
-class Index extends Controller
+use \despote\base\Service;
+
+class Tpl extends Service
 {
-    public function index()
-    {
-        $this->render();
-    }
-
-    public function home()
-    {
-        echo "我是 home";
-    }
 }

@@ -35,7 +35,6 @@ class Router extends Service
 
     protected function init()
     {
-        // echo "路由成功加载<br>";
         $host = Despote::request()->getHost();
         if (!empty($this->host) && !isset($this->host[$host])) {
             // 域名绑定校验
@@ -78,7 +77,6 @@ class Router extends Service
         ];
 
         Despote::request()->load($_GET);
-//        echo Despote::router()->getModule();  //TODO 无限循环
     }
 
     public function getModule()

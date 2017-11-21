@@ -14,9 +14,15 @@
 namespace despote\base;
 
 use Despote;
+use despote\base\Service;
 
-class View
+class View extends Service
 {
+    protected function init()
+    {
+        defined('PATH_RES') || define('PATH_RES', Despote::request()->getHost() . 'static' . DS);
+    }
+
     public function render($viewName = '', $viewParams = [], $layoutName = '', $layoutParams = [])
     {
         // 获取文件后缀
