@@ -1,4 +1,15 @@
 <?php
+/*
+ *    ____                        _
+ *   |  _ \  ___  ___ _ __   ___ | |_ ___
+ *   | | | |/ _ \/ __| '_ \ / _ \| __/ _ \
+ *   | |_| |  __/\__ \ |_) | (_) | ||  __/
+ *   |____/ \___||___/ .__/ \___/ \__\___|
+ *                   |_|
+ * 视图类，用于加载视图
+ * @author      He110 (i@he110.top)
+ * @namespace   despote\base
+ */
 
 namespace despote\base;
 
@@ -8,18 +19,26 @@ class View
 {
     public function render($viewName = '', $viewParams = [], $layoutName = '', $layoutParams = [])
     {
-        // 获取当前模块的视图目录
-        $path = PATH_APP . Despote::router()->getModule() . DS . 'view' . DS;
-        // 获取视图文件的绝对路径
-        $view = $path . $viewName;
+        // 获取文件后缀
+        $suffix = strtolower(pathinfo($viewName, PATHINFO_EXTENSION));
 
-        // 读入视图文件内容
-        $content = $this->renderView($view, $viewParams);
-        // 判断是否加载布局
-        echo empty($layoutName) ? $content : $this->renderView(
-            $path . 'layout' . DS . $layoutName,
-            array_merge($layoutParams, ['container' => $content])
-        );
+        if ($suffix == 'php') {
+            // 获取当前模块的视图目录
+            $path = PATH_APP . Despote::router()->getModule() . DS . 'view' . DS;
+            // 获取视图文件的绝对路径
+            $view = $path . $viewName;
+
+            // 读入视图文件内容
+            $content = $this->renderView($view, $viewParams);
+            // 判断是否加载布局
+            echo empty($layoutName) ? $content : $this->renderView(
+                $path . 'layout' . DS . $layoutName,
+                array_merge($layoutParams, ['container' => $content])
+            );
+        } else {
+            // 使用模板引擎处理
+        }
+
     }
 
     private function renderView($view, $params = [])

@@ -1,10 +1,18 @@
 <?php
+/*
+ *    ____                        _
+ *   |  _ \  ___  ___ _ __   ___ | |_ ___
+ *   | | | |/ _ \/ __| '_ \ / _ \| __/ _ \
+ *   | |_| |  __/\__ \ |_) | (_) | ||  __/
+ *   |____/ \___||___/ .__/ \___/ \__\___|
+ *                   |_|
+ * 控制器基类
+ * @author      He110 (i@he110.top)
+ * @namespace   despote\base
+ */
 
 namespace despote\base;
 
-/**
- * 控制器基类
- */
 class Controller
 {
     protected $view;

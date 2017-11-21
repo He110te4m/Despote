@@ -1,22 +1,26 @@
 <?php
-
-/**
+/*
+ *    ____                        _
+ *   |  _ \  ___  ___ _ __   ___ | |_ ___
+ *   | | | |/ _ \/ __| '_ \ / _ \| __/ _ \
+ *   | |_| |  __/\__ \ |_) | (_) | ||  __/
+ *   |____/ \___||___/ .__/ \___/ \__\___|
+ *                   |_|
  * 工具类，放置一些常用函数
+ * @author      He110 (i@he110.top)
+ * @namespace   despote\kernel
  */
+
 class Utils
 {
-    ///////////////////
-    // 资源统计相关属性 //
-    ///////////////////
+    /////////////
+    // 资源统计 //
+    ////////////
 
     // 统计的时间
     private static $times = [];
     // 统计的内存占用
     private static $memories = [];
-
-    ////////////////
-    // 资源统计函数 //
-    ////////////////
 
     /**
      * 计算资源占用，并保存在数组中，只在 DEBUG 模式才会触发该事件
@@ -85,11 +89,32 @@ class Utils
     public static function begin()
     {
         self::$id = mt_rand();
-        echo self::$id . '开始';
+        echo self::$id . '开始<br>';
     }
 
     public static function end()
     {
-        echo self::$id . "结束";
+        echo self::$id . '结束<br>';
+    }
+
+    /////////////
+    // 配置加载 //
+    ////////////
+
+    private static $config;
+
+    public static function initConf()
+    {
+        // 屏蔽系统错误提示
+        ini_set('display_errors', 'Off');
+        error_reporting(0);
+        self::config('error_catch') && Event::trigger('ERROR_CATCH_ON');
+    }
+
+    public static function config($name, $defaultValue = '')
+    {
+        empty(self::$config) && self::$config = require PATH_CONF . 'config.php';
+
+        return isset(self::$config[$name]) ? self::$config[$name] : $defaultValue;
     }
 }

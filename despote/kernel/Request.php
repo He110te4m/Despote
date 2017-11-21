@@ -1,12 +1,20 @@
 <?php
+/*
+ *    ____                        _
+ *   |  _ \  ___  ___ _ __   ___ | |_ ___
+ *   | | | |/ _ \/ __| '_ \ / _ \| __/ _ \
+ *   | |_| |  __/\__ \ |_) | (_) | ||  __/
+ *   |____/ \___||___/ .__/ \___/ \__\___|
+ *                   |_|
+ * 请求处理类
+ * @author      He110 (i@he110.top)
+ * @namespace   despote\kernel
+ */
 
 namespace despote\kernel;
 
 use \despote\base\Service;
 
-/**
- * 请求处理类
- */
 class Request extends Service
 {
     ////////////////

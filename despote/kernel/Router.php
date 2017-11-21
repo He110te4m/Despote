@@ -1,12 +1,21 @@
 <?php
-
-/**
+/*
+ *    ____                        _
+ *   |  _ \  ___  ___ _ __   ___ | |_ ___
+ *   | | | |/ _ \/ __| '_ \ / _ \| __/ _ \
+ *   | |_| |  __/\__ \ |_) | (_) | ||  __/
+ *   |____/ \___||___/ .__/ \___/ \__\___|
+ *                   |_|
  * 路由解析类
+ * @author      He110 (i@he110.top)
+ * @namespace   despote\kernel
  */
+
 namespace despote\kernel;
 
 use \Despote;
 use \despote\base\Service;
+use \Event;
 
 class Router extends Service
 {
@@ -92,16 +101,19 @@ class Router extends Service
         // 获取控制器对应的类
         $class = '\app\\' . $this->getModule() . '\controller\\' . $this->getCtrl();
 
-        // // 反射获取 action 的参数并将值存在数组中
-        // $obj    = new \ReflectionClass($class);
-        // $func   = $obj->getMethod($this->getAction());
+        // 反射获取 action 的参数并将值存在数组中
+        $obj    = new \ReflectionClass($class);
+        $func   = $obj->getMethod($this->getAction());
         $params = [];
-        // foreach ($func->getParameters() as $param) {
-        //     $val                  = Despote::request()->get($param->name, false);
-        //     $params[$param->name] = $val === false ? '' : $val;
-        // }
-
-        // 实例化控制器并调用 action
-        call_user_func_array([new $class(), $this->getAction()], $params);
+        foreach ($func->getParameters() as $param) {
+            $val                  = Despote::request()->get($param->name, false);
+            $params[$param->name] = $val === false ? '' : $val;
+        }
+        if ($func->isPublic()) {
+            Event::trigger('BEFORE_ACTION');
+            // 实例化控制器并调用 action
+            call_user_func_array([new $class(), $this->getAction()], $params);
+            Event::trigger('AFTER_ACTION');
+        }
     }
 }

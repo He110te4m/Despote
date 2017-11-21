@@ -6,15 +6,11 @@
  *   | |_| |  __/\__ \ |_) | (_) | ||  __/
  *   |____/ \___||___/ .__/ \___/ \__\___|
  *                   |_|
- * 自定义需要加载的组件
+ * 系统配置
  * @author      He110 (i@he110.top)
  */
 
 return [
-    'router' => [
-        'class'      => '\despote\kernel\Router',
-        'module'     => 'Home',
-        'controller' => 'Index',
-        'action'     => 'index',
-    ],
+    'error_catch' => 1,
+    'sys_info'    => 'Despote 3.0',
 ];

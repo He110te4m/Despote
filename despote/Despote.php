@@ -16,12 +16,17 @@ class Despote
     {
         // 注册必要事件
         self::initEvent();
+
         // 统计现在的资源占用信息，方便在过程中获取
-        Event::trigger('TICK', '框架运行');
+        Event::trigger('TICK', '框架核心');
         // 开始核心方法
         self::initCore();
+        // 加载配置文件配置
+        Event::trigger('INIT_CONFIG');
+        // 开始路由分发
+        self::router()->loadCtrl();
         // 统计最终运行时间
-        Event::trigger('TICK', '框架运行');
+        Event::trigger('TICK', '框架核心');
     }
 
     /**
@@ -58,8 +63,6 @@ class Despote
         ];
         // 加载系统服务
         self::$services = array_merge($core, $services);
-        // 开始路由分发
-        self::router()->loadCtrl();
     }
 
     /**
@@ -77,7 +80,6 @@ class Despote
             if (is_array(self::$services[$id])) {
                 // 如果是数组，直接获取类名
                 $class = self::$services[$id]['class'];
-                // echo $class . '<br>';
                 // 去除类名，表示已经初始化过了
                 unset(self::$services[$id]['class']);
                 // 初始化服务并丢到对象池中
