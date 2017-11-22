@@ -6,29 +6,38 @@
  *   | |_| |  __/\__ \ |_) | (_) | ||  __/
  *   |____/ \___||___/ .__/ \___/ \__\___|
  *                   |_|
- * 所有数据操作相关的类需要遵循的接口规范
+ * 缓存类
  * @author      He110 (i@he110.top)
- * @namespace   despote\base
+ * @namespace   despote\kernel\cache
  */
 
-namespace despote\base;
+namespace despote\kernel\cache;
 
-interface Idata
+use despote\base\Idata;
+
+class MemCache extends Service implements Idata
 {
     // 设置数据接口规范
-    function set($key, $value, $expiry = 99999999);
+    public function set($key, $value, $expiry = 99999999)
+    {}
     // 批量设置数据接口规范
-    function mset($keys, $values, $expiry = 99999999);
+    public function mset($keys, $values, $expiry = 99999999)
+    {}
     // 删除数据接口规范
-    function del($key);
+    public function del($key)
+    {}
     // 批量删除数据接口规范
-    function mdel($keys);
+    public function mdel($keys)
+    {}
     // 获取数据接口规范
-    function get($key);
+    public function get($key)
+    {}
     // 批量获取数据接口规范
-    function mget($keys);
+    public function mget($keys)
+    {}
     // 查询数据是否存在接口规范
-    function has($key);
-    // 清空缓存
-    function flush();
+    public function has($key)
+    {}
+    public function flush()
+    {}
 }

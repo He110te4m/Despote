@@ -11,12 +11,24 @@
  */
 namespace app\Home\controller;
 
+use \Despote;
 use \despote\base\Controller;
 
 class Index extends Controller
 {
     public function index()
     {
+        Despote::fileCache()->set('usr', 'He110');
+        Despote::fileCache()->set('pwd', '520520520');
+        echo Despote::fileCache()->get('usr');
+        echo "<br>";
+        echo Despote::fileCache()->get('pwd');
+        echo "<br>";
+        Despote::fileCache()->del('pwd');
+        echo Despote::fileCache()->get('usr');
+        echo "<br>";
+        echo Despote::fileCache()->get('pwd');
+        echo "<br>";
         $this->render();
     }
 
