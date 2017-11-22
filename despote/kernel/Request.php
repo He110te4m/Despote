@@ -7,7 +7,6 @@
  *   |____/ \___||___/ .__/ \___/ \__\___|
  *                   |_|
  * 请求处理类
- * @author      He110 (i@he110.top)
  * @namespace   despote\kernel
  */
 
@@ -56,8 +55,8 @@ class Request extends Service
     public function getHost($schema = false)
     {
         // 判断使用的协议类型
-        $secure = $this->isHttps();
-        $host   = $schema ? ($secure ? 'https://' : 'http://') : '';
+        $isHttps = $this->isHttps();
+        $host    = $schema ? ($isHttps ? 'https://' : 'http://') : '';
 
         // 获取服务器域名
         if (isset($_SERVER['HTTP_HOST'])) {
@@ -67,7 +66,7 @@ class Request extends Service
             $port = $this->getPort();
 
             // 如果不是 HTTP 或 HTTPS 的默认端口，则加上端口显示
-            if ((!$secure && $port !== 80) || ($secure && $port !== 443)) {
+            if ((!$isHttps && $port !== 80) || ($isHttps && $port !== 443)) {
                 $host .= ':' . $port;
             }
         }

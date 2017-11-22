@@ -25,3 +25,5 @@ define('PATH_CONF', PATH_DESPOTE . 'conf' . DS);
 define('PATH_KERNEL', PATH_DESPOTE . 'kernel' . DS);
 // 定义运行目录
 define('PATH_APP', PATH_ROOT . 'app' . DS);
+// 定义视图文件访问校验
+define('DESPOTE', true);

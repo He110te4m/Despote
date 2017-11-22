@@ -13,6 +13,7 @@
 namespace despote\kernel;
 
 use \despote\base\Service;
+use \Utils;
 
 class ErrCatch extends Service
 {
@@ -39,13 +40,6 @@ class ErrCatch extends Service
      */
     public function onException($exception)
     {
-        // 获取错误信息
-        $msg = $this->getLine($exception->getFile(), $exception->getLine() - 5, $exception->getLine() + 5);
-        // 获取错误代码
-        $code = $msg['code'];
-        // 获取错误追踪
-        $trace = $msg['trace'];
-
         // 输出错误信息
         $this->display('Exception', $exception->getMessage(), $exception->getFile(), $exception->getLine());
     }
@@ -70,51 +64,19 @@ class ErrCatch extends Service
     }
 
     /**
-     * 错误追踪
-     * @param  String  $filename  文件名，包含文件路径
-     * @param  integer $startLine 起始代码行
-     * @param  integer $endLine   结束代码行
-     * @param  string  $mode      以什么模式打开文件
-     * @return Array              错误代码行(code) 和 错误追踪(trace)
+     * 显示错误信息
+     * @param  String  $type    错误的类型，是 Error 还是 Exception
+     * @param  String  $errstr  错误类型
+     * @param  String  $errfile 错误发生的文件的绝对路径
+     * @param  integer $errline 错误发生的行数
      */
-    private function getLine($filename, $startLine = 1, $endLine = 20, $mode = 'rb')
-    {
-        $content = [];
-        $count   = $endLine - $startLine;
-        $fp      = new \SplFileObject($filename, $mode);
-        $half    = ($startLine + $endLine) / 2;
-        // 转到第N行, seek方法参数从0开始计数
-        $fp->seek($startLine - 1);
-        for ($i = 0; $i <= $count; ++$i) {
-            $nowline = $startLine + $i;
-            // current()获取当前行内容
-            if ($nowline == (($startLine + $endLine) / 2)) {
-                $msg['code'] = trim($fp->current());
-                $content[]   = sprintf("<li> <span style=\"color: red;\">%s</span> </li>", $msg['code']);
-            } else {
-                $content[] = sprintf("<li> %s </li>", $fp->current());
-            }
-            // 下一行
-            $fp->next();
-            if ($fp->eof()) {
-                array_pop($content);
-                break;
-            }
-        }
-        $msg['trace'] = implode('', array_filter($content));
-
-        return $msg;
-    }
-
-    // 下次更新使用模板引擎做
     private function display($type, $errstr, $errfile, $errline)
     {
-        // 获取错误信息
-        $msg = $this->getLine($errfile, $errline - 5, $errline + 5);
-        // 获取错误代码
-        $code = $msg['code'];
         // 获取错误追踪
-        $trace = $msg['trace'];
+        $contents = Utils::getFileLine($errfile, [$errline - 5, $errline + 5]);
+        $trace    = '<li> ' . implode(' </li><li> ', $contents) . ' </li>';
+        // 获取错误代码行内容
+        $code = Utils::getFileLine($errfile, $errline);
 
         // 输出错误信息
         echo <<<EOF
