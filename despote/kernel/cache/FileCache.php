@@ -13,10 +13,10 @@
 
 namespace despote\kernel\cache;
 
-use despote\base\Idata;
-use despote\base\Service;
+use \despote\base\Icache;
+use \despote\base\Service;
 
-class FileCache extends Service implements Idata
+class FileCache extends Service implements Icache
 {
     // GC 设置
     protected $gc;
@@ -65,6 +65,31 @@ class FileCache extends Service implements Idata
                     @unlink($file);
                 }
             }
+        }
+    }
+
+    public function add($key, $value, $expiry = 0)
+    {
+        $this->has($key) || $this->set($key, $value);
+    }
+
+    /**
+     * 批量添加缓存数据，当键值数组的元素个数比键名数组中元素少时，使用键值数组最后一个元素作为其余键名的值
+     * @param  Array   $keys   键名数组，必须为索引数组
+     * @param  Array   $values 键值数组，必须为索引数组
+     */
+    public function madd($key, $value, $expiry = 0)
+    {
+        if (is_array($key)) {
+            // 如果是数组，为了防止键值数组元素个数比键名数组元素个数少，将最后一个值取出，多出的键名全部使用值数组最后一个元素作为值
+            $val = $values[count($values) - 1];
+            for ($i = 0; $i < count($key); $i++) {
+                $value = isset($values[$i]) ? $values[$i] : $val;
+                $this->set($keys[$i], $value);
+            }
+        } else {
+            // 如果不是数组直接设置并返回
+            $this->set($key, $value);
         }
     }
 

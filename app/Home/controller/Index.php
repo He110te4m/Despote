@@ -28,8 +28,13 @@ class Index extends Controller
         echo Despote::fileCache()->get('usr');
         echo "<br>";
         echo Despote::fileCache()->get('pwd');
+        var_dump(Despote::fileCache()->has('usr'));
+        var_dump(Despote::fileCache()->has('pwd'));
         echo "<br>";
-        $this->render();
+        Despote::fileCache()->add('usr', '520520520');
+        echo Despote::fileCache()->get('usr');
+        echo "<br>";
+        // $this->render();
     }
 
     public function home()
