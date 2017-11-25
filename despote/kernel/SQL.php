@@ -32,6 +32,16 @@ class SQL extends Service
 
     // 数据库类型
     protected $type = 'mysql';
+    private $event  = [
+        'BEFORE_INSERT' => '',
+        'BEFORE_DELETE' => '',
+        'BEFORE_UPDATE' => '',
+        'BEFORE_SELECT' => '',
+        'AFTER_INSERT'  => '',
+        'AFTER_DELETE'  => '',
+        'AFTER_UPDATE'  => '',
+        'AFTER_SELECT'  => '',
+    ];
 
     //////////////
     // 公共配置 //
@@ -129,12 +139,44 @@ class SQL extends Service
     }
 
     /**
+     * 使用魔术方法回调进行事件触发
+     */
+    public function __CALL($func, $args = [])
+    {
+        empty($this->event[$func]) || call_user_func_array($this->event[$func], $args);
+    }
+
+    /**
+     * 注册单个事件
+     * @param  String  $event    事件名称，必须在本类中的 event 属性中存在的才能注册
+     * @param  Closure $callback 匿名函数
+     */
+    public function hook($event, \Closure $callback)
+    {
+        if (array_key_exists($event, $this->event)) {
+            $this->event[$event] = $callback;
+            Event::on($event, [$this, $event]);
+        }
+    }
+
+    /**
+     * 批量注册事件，使用数组对多个事件进行初始化
+     * @param  array  $events 关联数组，格式为：['事件名' => 匿名函数]，注意，不能传入回调函数，只能直接传入函数
+     */
+    public function hookArray($events = [])
+    {
+        foreach ($events as $event => $func) {
+            $this->hook($event, $func);
+        }
+    }
+
+    /**
      * 执行 SQL 语句
      * @param  String $sql  SQL 语句，可包含带预处理符号，如：delete from `user` where `Id` = ?
      * @param  array  $data 如果传入的 SQL 语句带有预处理，则必须传入该参数，用于赋值给预处理变量
      * @return Mixed        如果执行成功，返回记录集对象；处理失败返回 false
      */
-    public function execSQL($sql, $data = [])
+    public function execSQL($sql, $event, $data = [])
     {
         if ($data === []) {
             // 直接返回结果
@@ -149,6 +191,10 @@ class SQL extends Service
             // 执行预处理后的语句
             $res->execute($data);
         }
+
+        // 触发 after 事件
+        $event = 'AFTER_' . strtoupper($event);
+        Event::trigger($event);
 
         return $res;
     }
@@ -174,9 +220,10 @@ class SQL extends Service
         }
         $sql = "INSERT INTO $table ($colName) $value";
 
-        Event::trigger('BRFORE_INSERT');
+        // 触发 before 事件
+        Event::trigger('BEFORE_INSERT');
 
-        return $this->execsql($sql, $data);
+        return $this->execsql($sql, 'insert', $data);
     }
 
     /**
@@ -190,9 +237,10 @@ class SQL extends Service
     {
         $sql = "DELETE FROM $table $condition";
 
-        Event::trigger('BRFORE_DELETE');
+        // 触发 before 事件
+        Event::trigger('BEFORE_DELETE');
 
-        return $this->execsql($sql, $data);
+        return $this->execsql($sql, 'delete', $data);
     }
 
     /**
@@ -207,9 +255,10 @@ class SQL extends Service
     {
         $sql = "UPDATE $table SET $set $condition";
 
-        Event::trigger('BRFORE_UPDATE');
+        // 触发 before 事件
+        Event::trigger('BEFORE_UPDATE');
 
-        return $this->execsql($sql, $data);
+        return $this->execsql($sql, 'update', $data);
     }
 
     /**
@@ -224,8 +273,9 @@ class SQL extends Service
     {
         $sql = "SELECT $colName FROM $table $condition";
 
-        Event::trigger('BRFORE_SELETE');
+        // 触发 before 事件
+        Event::trigger('BEFORE_SELECT');
 
-        return $this->execsql($sql, $data);
+        return $this->execsql($sql, 'select', $data);
     }
 }
