@@ -23,7 +23,7 @@ class Event
      * @param  boolean  $onlyOneTime 是否只执行一次
      * @return boolean               注册成功或者失败
      */
-    public static function hook($event, $callback, $onlyOneTime = false)
+    public static function on($event, $callback, $onlyOneTime = false)
     {
         // 判断回调处理函数能否被调用，不能就不添加了
         if (!is_callable($callback)) {
@@ -45,7 +45,7 @@ class Event
      * @param  String  $event 事件名称
      * @param  integer $index 第几个回调函数
      */
-    public static function unhook($event, $index = null)
+    public static function remove($event, $index = null)
     {
         if (is_null($index)) {
             unset(self::$events[$event]);
@@ -81,7 +81,7 @@ class Event
             // 取得要执行的函数或者匿名方法这里其实应该加个判断
             $callback = $item['callback'];
             // 判断是不是只执行一次，是就执行完注销事件
-            $item['onlyOneTime'] && self::unhook($event, $index);
+            $item['onlyOneTime'] && self::remove($event, $index);
             // 执行函数，不要解析太多，后面跟的是方法和参数名，这里可以任意发挥！
             $results[] = call_user_func_array($callback, $args);
         }

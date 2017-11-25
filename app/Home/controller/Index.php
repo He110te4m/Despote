@@ -11,18 +11,12 @@
  */
 namespace app\Home\controller;
 
-use \Despote;
 use \despote\base\Controller;
 
 class Index extends Controller
 {
     public function index()
     {
-        Despote::logger()->log('INFO', '测试 info');
-        Despote::logger()->log('Debug', '测试 Debug');
-        Despote::logger()->log('Warn', '测试 Warn');
-        Despote::logger()->log('error', '测试 error');
-        Despote::logger()->log('fatal', '测试 fatal');
         $this->render();
     }
 

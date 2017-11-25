@@ -46,7 +46,7 @@ class Despote
             $only = isset($event['only']) ? $event['only'] : false;
 
             // 添加事件
-            Event::hook($event['name'], $event['callback'], $only);
+            Event::on($event['name'], $event['callback'], $only);
         }
     }
 

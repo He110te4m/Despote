@@ -96,7 +96,5 @@ class ErrCatch extends Service
     </ul>
 </div>
 EOF;
-        // 开了错误捕获就是在开发阶段，那么出了 BUG 就不该继续执行，方便知道哪一步出错了
-        die;
     }
 }
