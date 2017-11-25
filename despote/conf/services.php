@@ -21,6 +21,12 @@ return [
         // 默认 Action
         'action'     => 'index',
     ],
+    // 日志记录
+    'logger'    => [
+        'class' => '\despote\kernel\Logger',
+        'path'  => PATH_LOG,
+        'limit' => 5,
+    ],
     // 快速缓存
     'cache'     => 'despote\kernel\cache\FastCache',
     // 文件缓存

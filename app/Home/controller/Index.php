@@ -18,23 +18,12 @@ class Index extends Controller
 {
     public function index()
     {
-        Despote::fileCache()->set('usr', 'He110');
-        Despote::fileCache()->set('pwd', '520520520');
-        echo Despote::fileCache()->get('usr');
-        echo "<br>";
-        echo Despote::fileCache()->get('pwd');
-        echo "<br>";
-        Despote::fileCache()->del('pwd');
-        echo Despote::fileCache()->get('usr');
-        echo "<br>";
-        echo Despote::fileCache()->get('pwd');
-        var_dump(Despote::fileCache()->has('usr'));
-        var_dump(Despote::fileCache()->has('pwd'));
-        echo "<br>";
-        Despote::fileCache()->add('usr', '520520520');
-        echo Despote::fileCache()->get('usr');
-        echo "<br>";
-        // $this->render();
+        Despote::logger()->log('INFO', '测试 info');
+        Despote::logger()->log('Debug', '测试 Debug');
+        Despote::logger()->log('Warn', '测试 Warn');
+        Despote::logger()->log('error', '测试 error');
+        Despote::logger()->log('fatal', '测试 fatal');
+        $this->render();
     }
 
     public function home()
