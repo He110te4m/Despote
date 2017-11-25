@@ -14,7 +14,6 @@ namespace despote\kernel;
 
 use \despote\base\Service;
 use \Event;
-use \Exception;
 use \PDO;
 
 class SQL extends Service
@@ -49,23 +48,6 @@ class SQL extends Service
 
     // 数据库连接选项，可选
     protected $opts = [];
-
-    ////////////////
-    // MySQL 配置 //
-    ////////////////
-
-    // 数据库主机地址
-    protected $host = 'localhost';
-    // 数据库端口，可选
-    protected $port = 3306;
-    // 数据库用户名
-    protected $usr = 'root';
-    // 数据库密码
-    protected $pwd = 'root';
-    // 数据库名
-    protected $name = 'test';
-    // 是否开启持久连接，在多进程服务器（如fastcgi、php-fpm）中，使用数据库持久连接可以提升服务器性能和抗压能力，可选
-    protected $pconn = true;
     // 默认字符集，可选
     protected $charset = 'utf8';
     // PDO 错误处理方式
@@ -100,6 +82,23 @@ class SQL extends Service
     // 是否开启模拟预处理
     protected $pretreat = false;
 
+    ////////////////
+    // MySQL 配置 //
+    ////////////////
+
+    // 数据库主机地址
+    protected $host = 'localhost';
+    // 数据库端口，可选
+    protected $port = 3306;
+    // 数据库用户名
+    protected $usr = 'root';
+    // 数据库密码
+    protected $pwd = 'root';
+    // 数据库名
+    protected $name = 'test';
+    // 是否开启持久连接，在多进程服务器（如fastcgi、php-fpm）中，使用数据库持久连接可以提升服务器性能和抗压能力，可选
+    protected $pconn = true;
+
     /////////////////
     // SQLite 配置 //
     /////////////////
@@ -119,29 +118,35 @@ class SQL extends Service
             case 'mysql':
                 // 创建 PDO 对象
                 $pdo = new PDO('mysql:dbname=' . $this->name . ';host=' . $this->host . ';port=' . $this->port, $this->usr, $this->pwd, $this->opts);
-                // 设置默认字符集
-                $pdo->exec('SET NAMES ' . $this->charset);
-                // 设置以报错形式
-                $pdo->setAttribute(PDO::ATTR_ERRMODE, $this->errModeList[$this->errMode]);
-                // 设置 fetch 时返回数据形式
-                $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, $this->fetchList[$this->fetch]);
-                // 设置是否启用模拟预处理
-                $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, $this->pretreat);
                 break;
 
             case 'sqlite':
+                $pdo = new PDO('sqlite:' . $this->file);
+                $pdo->exec('PRAGMA synchronous=' . $this->sync);
                 break;
 
             default:
-                throw new Exception('暂不支持 ' . $this->type . ' 类型的数据库', 500);
+                throw new \Exception('暂不支持 ' . $this->type . ' 类型的数据库', 500);
                 break;
         }
+        // 设置默认字符集
+        $pdo->exec('SET NAMES ' . $this->charset);
+        // 设置以报错形式
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, $this->errModeList[$this->errMode]);
+        // 设置 fetch 时返回数据形式
+        $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, $this->fetchList[$this->fetch]);
+        // 设置是否启用模拟预处理
+        $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, $this->pretreat);
     }
+
+    ////////////////
+    // 事件触发相关 //
+    ////////////////
 
     /**
      * 使用魔术方法回调进行事件触发
      */
-    public function __CALL($func, $args = [])
+    public function __call($func, $args = [])
     {
         empty($this->event[$func]) || call_user_func_array($this->event[$func], $args);
     }
@@ -169,6 +174,10 @@ class SQL extends Service
             $this->hook($event, $func);
         }
     }
+
+    /////////////
+    // SQL 相关 //
+    /////////////
 
     /**
      * 执行 SQL 语句
