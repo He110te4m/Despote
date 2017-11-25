@@ -20,6 +20,8 @@ define('PATH_ROOT', dirname(__DIR__) . DS);
 define('PATH_DESPOTE', PATH_ROOT . 'despote' . DS);
 // 定义运行目录
 define('PATH_APP', PATH_ROOT . 'app' . DS);
+// 定义静态资源目录
+define('PATH_RES', PATH_ROOT . 'static' . DS);
 
 // 框架基类文件目录
 define('PATH_BASE', PATH_DESPOTE . 'base' . DS);

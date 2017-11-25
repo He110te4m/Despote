@@ -21,6 +21,7 @@ return [
         // 默认 Action
         'action'     => 'index',
     ],
+    // SQL 数据库操作类
     'sql'       => [
         'class' => '\despote\kernel\SQL',
         // // 数据库类型，暂仅支持 MySQL
@@ -73,6 +74,8 @@ return [
         'path'  => PATH_LOG,
         'limit' => 5,
     ],
+    // 文件上传
+    'upload'    => '\despote\kernel\Upload',
     // 快速缓存
     'cache'     => 'despote\kernel\cache\FastCache',
     // 文件缓存

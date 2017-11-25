@@ -25,26 +25,18 @@ class View extends Service
 
     public function render($viewName = '', $viewParams = [], $layoutName = '', $layoutParams = [])
     {
-        // 获取文件后缀
-        $suffix = strtolower(pathinfo($viewName, PATHINFO_EXTENSION));
+        // 获取当前模块的视图目录
+        $path = PATH_APP . Despote::router()->getModule() . DS . 'view' . DS;
+        // 获取视图文件的绝对路径
+        $view = $path . $viewName;
 
-        if ($suffix == 'php') {
-            // 获取当前模块的视图目录
-            $path = PATH_APP . Despote::router()->getModule() . DS . 'view' . DS;
-            // 获取视图文件的绝对路径
-            $view = $path . $viewName;
-
-            // 读入视图文件内容
-            $content = $this->renderView($view, $viewParams);
-            // 判断是否加载布局
-            echo empty($layoutName) ? $content : $this->renderView(
-                $path . 'layout' . DS . $layoutName,
-                array_merge($layoutParams, ['container' => $content])
-            );
-        } else {
-            // 使用模板引擎处理
-        }
-
+        // 读入视图文件内容
+        $content = $this->renderView($view, $viewParams);
+        // 判断是否加载布局
+        echo empty($layoutName) ? $content : $this->renderView(
+            $path . 'layout' . DS . $layoutName,
+            array_merge($layoutParams, ['container' => $content])
+        );
     }
 
     private function renderView($view, $params = [])

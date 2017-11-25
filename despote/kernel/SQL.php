@@ -111,7 +111,7 @@ class SQL extends Service
     //   OFF   (不强制磁盘同步：断电或死机后很容易损坏数据库，但是插入或更新速度比 FULL 提升 50 倍，由系统自行将更改写入数据库中而不强制同步到磁盘)
     protected $sync = 'OFF';
 
-    public function init()
+    protected function init()
     {
         $pdo = &$this->pdo;
         switch ($this->type) {
@@ -137,42 +137,6 @@ class SQL extends Service
         $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, $this->fetchList[$this->fetch]);
         // 设置是否启用模拟预处理
         $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, $this->pretreat);
-    }
-
-    ////////////////
-    // 事件触发相关 //
-    ////////////////
-
-    /**
-     * 使用魔术方法回调进行事件触发
-     */
-    public function __call($func, $args = [])
-    {
-        empty($this->event[$func]) || call_user_func_array($this->event[$func], $args);
-    }
-
-    /**
-     * 注册单个事件
-     * @param  String  $event    事件名称，必须在本类中的 event 属性中存在的才能注册
-     * @param  Closure $callback 匿名函数
-     */
-    public function hook($event, \Closure $callback)
-    {
-        if (array_key_exists($event, $this->event)) {
-            $this->event[$event] = $callback;
-            Event::on($event, [$this, $event]);
-        }
-    }
-
-    /**
-     * 批量注册事件，使用数组对多个事件进行初始化
-     * @param  array  $events 关联数组，格式为：['事件名' => 匿名函数]，注意，不能传入回调函数，只能直接传入函数
-     */
-    public function hookArray($events = [])
-    {
-        foreach ($events as $event => $func) {
-            $this->hook($event, $func);
-        }
     }
 
     /////////////
@@ -286,5 +250,41 @@ class SQL extends Service
         Event::trigger('BEFORE_SELECT');
 
         return $this->execsql($sql, 'select', $data);
+    }
+
+    ////////////////
+    // 事件触发相关 //
+    ////////////////
+
+    /**
+     * 使用魔术方法回调进行事件触发
+     */
+    public function __call($func, $args = [])
+    {
+        empty($this->event[$func]) || call_user_func_array($this->event[$func], $args);
+    }
+
+    /**
+     * 注册单个事件
+     * @param  String  $event    事件名称，必须在本类中的 event 属性中存在的才能注册
+     * @param  Closure $callback 匿名函数
+     */
+    public function hook($event, \Closure $callback)
+    {
+        if (array_key_exists($event, $this->event)) {
+            $this->event[$event] = $callback;
+            Event::on($event, [$this, $event]);
+        }
+    }
+
+    /**
+     * 批量注册事件，使用数组对多个事件进行初始化
+     * @param  array  $events 关联数组，格式为：['事件名' => 匿名函数]，注意，不能传入回调函数，只能直接传入函数
+     */
+    public function hookArray($events = [])
+    {
+        foreach ($events as $event => $func) {
+            $this->hook($event, $func);
+        }
     }
 }
