@@ -13,11 +13,9 @@
 
 namespace despote\kernel\cache;
 
-use \despote\base\Icache;
-use \despote\base\Service;
 use \Memcached;
 
-class MemCache extends Service implements Icache
+class MemCache extends Cache
 {
     // MemCache 服务器列表
     protected $servers;
@@ -61,73 +59,24 @@ class MemCache extends Service implements Icache
         $this->has($key) || $this->set($key, $value);
     }
 
-    /**
-     * 批量添加缓存数据，当键值数组的元素个数比键名数组中元素少时，使用键值数组最后一个元素作为其余键名的值
-     * @param  Array   $keys   键名数组，必须为索引数组
-     * @param  Array   $values 键值数组，必须为索引数组
-     */
-    public function madd($key, $value, $expiry = 0)
-    {
-        if (is_array($key)) {
-            // 如果是数组，为了防止键值数组元素个数比键名数组元素个数少，将最后一个值取出，多出的键名全部使用值数组最后一个元素作为值
-            $val = $values[count($values) - 1];
-            for ($i = 0; $i < count($key); $i++) {
-                $value = isset($values[$i]) ? $values[$i] : $val;
-                $this->set($keys[$i], $value);
-            }
-        } else {
-            // 如果不是数组直接设置并返回
-            $this->set($key, $value);
-        }
-    }
-
     // 设置数据接口规范
-    public function set($key, $value, $expiry = 259200)
+    public function set($key, $value, $expiry = 0)
     {
         return $this->getIns()->set($key, $value, $expiry > 0 ? time() + $expiry : 0);
     }
-    // 批量设置数据接口规范
-    public function mset($keys, $values, $expiry = 259200)
-    {
-        if (is_array($key)) {
-            // 如果是数组，为了防止键值数组元素个数比键名数组元素个数少，将最后一个值取出，多出的键名全部使用值数组最后一个元素作为值
-            $val = $values[count($values) - 1];
-            for ($i = 0; $i < count($key); $i++) {
-                $value = isset($values[$i]) ? $values[$i] : $val;
-                $this->set($keys[$i], $value, $expiry);
-            }
-        } else {
-            // 如果不是数组直接设置并返回
-            $this->set($key, $value);
-        }
-    }
+
     // 删除数据接口规范
     public function del($key)
     {
         return $this->getIns()->delete($key);
     }
-    // 批量删除数据接口规范
-    public function mdel($keys)
-    {
-        foreach ($keys as $key) {
-            $this->del($key);
-        }
-    }
+
     // 获取数据接口规范
     public function get($key)
     {
         return $this->getIns()->get($key);
     }
-    // 批量获取数据接口规范
-    public function mget($keys)
-    {
-        $result = [];
-        foreach ($keys as $key) {
-            $result[$key] = $this->get($key);
-        }
 
-        return $result;
-    }
     // 查询数据是否存在接口规范
     public function has($key)
     {
@@ -136,6 +85,7 @@ class MemCache extends Service implements Icache
         // 返回获取是否成功
         return $this->getIns()->getResultCode() === Memcached::RES_SUCCESS;
     }
+
     public function flush()
     {
         return $this->getIns()->flush();
