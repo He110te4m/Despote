@@ -74,6 +74,13 @@ return [
         'path'  => PATH_LOG,
         'limit' => 5,
     ],
+    // // 反向代理设置
+    // 'proxy'     => [
+    //     'class'  => '\despote\kernel\Proxy',
+    //     'host'   => '107.178.194.20',
+    //     'port'   => 8089,
+    //     'subDir' => 'Index/home',
+    // ],
     // 文件上传
     'upload'    => '\despote\kernel\Upload',
     // 快速缓存

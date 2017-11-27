@@ -22,7 +22,6 @@ class Request extends Service
 
     /**
      * 获取用户请求的 URI 地址
-     * @return String URI 地址
      */
     public function getUri()
     {
@@ -30,8 +29,7 @@ class Request extends Service
     }
 
     /**
-     * 返回服务器端口
-     * @return integer
+     * 获取服务器端口
      */
     public function getPort()
     {
@@ -39,8 +37,7 @@ class Request extends Service
     }
 
     /**
-     * 返回服务器IP
-     * @return string|null
+     * 获取服务器 IP
      */
     public function getIP()
     {
@@ -48,9 +45,8 @@ class Request extends Service
     }
 
     /**
-     * 返回 HOST
+     * 获取 HOST
      * @param boolean $schema 是否显示协议头 http(s)://
-     * @return string
      */
     public function getHost($schema = false)
     {
@@ -75,8 +71,7 @@ class Request extends Service
     }
 
     /**
-     * 返回查询字符串
-     * @return string
+     * 获取请求字符串，即 ? 后面的内容
      */
     public function getQuery()
     {
@@ -84,8 +79,7 @@ class Request extends Service
     }
 
     /**
-     * 返回 UserAgent
-     * @return string|null
+     * 获取 UserAgent
      */
     public function getUA()
     {
@@ -93,12 +87,19 @@ class Request extends Service
     }
 
     /**
-     * 返回客户端IP
-     * @return string|null
+     * 返回客户端 IP，如果使用代理将会返回最后一个代理服务器的 IP 地址
      */
     public function getUserIP()
     {
         return isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
+    }
+
+    /**
+     * 返回客户端 IP，获取使用代理时的真实 IP 地址，如果没有使用代理，该值为 null
+     */
+    public function getUserRealIP()
+    {
+        return isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : null;
     }
 
     /**

@@ -20,8 +20,9 @@ class Index extends Controller
         $this->render();
     }
 
-    public function upload()
+    public function home()
     {
-        \Despote::upload()->up('file');
+        \Despote::proxy()->conn();
+        \Despote::proxy()->display();
     }
 }
