@@ -58,8 +58,14 @@ class Despote
         $services = require PATH_CONF . 'services.php';
         // 必备服务，不管配置文件是否加载都需要加载的文件
         $core = [
-            'request' => '\despote\kernel\Request',
-            'router'  => '\despote\kernel\Router',
+            'request'   => '\despote\kernel\Request',
+            'router'    => '\despote\kernel\Router',
+            'fileCache' => [
+                'class' => 'despote\kernel\cache\FileCache',
+                // 缓存路径
+                'gc'    => 50,
+                'path'  => PATH_CACHE,
+            ],
         ];
         // 加载系统服务
         self::$services = array_merge($core, $services);

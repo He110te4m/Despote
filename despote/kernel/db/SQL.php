@@ -8,10 +8,11 @@
  *                   |_|
  * SQL 数据库操作类
  * @author      He110 (i@he110.top)
- * @namespace   despote\kernel;
+ * @namespace   despote\kernel\db;
  */
-namespace despote\kernel;
+namespace despote\kernel\db;
 
+use \Despote;
 use \despote\base\Service;
 use \Event;
 use \PDO;
@@ -30,8 +31,9 @@ class SQL extends Service
     ////////////////
 
     // 数据库类型
-    protected $type = 'mysql';
-    private $event  = [
+    protected $type  = 'mysql';
+    protected $cache = true;
+    private $event   = [
         'BEFORE_INSERT' => '',
         'BEFORE_DELETE' => '',
         'BEFORE_UPDATE' => '',
@@ -249,7 +251,19 @@ class SQL extends Service
         // 触发 before 事件
         Event::trigger('BEFORE_SELECT');
 
-        return $this->execsql($sql, 'select', $data);
+        // 缓存处理
+        if ($this->cache) {
+            $cache = Despote::fileCache();
+            if ($cache->has($sql)) {
+                return $cache->get($sql);
+            }
+        }
+
+        // 无缓存处理
+        $res = $this->execsql($sql, 'select', $data);
+        $this->cache && $cache->set($sql, $res->fetchAll());
+
+        return $res;
     }
 
     ////////////////

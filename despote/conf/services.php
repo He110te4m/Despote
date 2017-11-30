@@ -23,7 +23,7 @@ return [
     ],
     // SQL 数据库操作类
     'sql'       => [
-        'class' => '\despote\kernel\SQL',
+        'class' => '\despote\kernel\db\SQL',
         // // 数据库类型，暂仅支持 MySQL
         // 'type'  => 'mysql',
 
@@ -41,6 +41,9 @@ return [
 
         // 数据库名，默认为 test
         'name'  => 'despote',
+
+        // // 开启数据库缓存，默认开启
+        // 'cache' => true,
 
         // // 是否开启持久连接，默认为 true
         // 'pconn' => true,

@@ -6,17 +6,18 @@
  *   | |_| |  __/\__ \ |_) | (_) | ||  __/
  *   |____/ \___||___/ .__/ \___/ \__\___|
  *                   |_|
+ * MongoDB 操作类
  * @author      He110 (i@he110.top)
- * @namespace   app\Home\controller
+ * @namespace   desopte\kernel\db;
  */
-namespace app\Home\controller;
 
-use \despote\base\Controller;
+namespace desopte\kernel\db;
 
-class Index extends Controller
+use \desopte\base\Service;
+
+class Mongo extends Service
 {
-    public function index()
+    public function init()
     {
-        $this->render();
     }
 }
