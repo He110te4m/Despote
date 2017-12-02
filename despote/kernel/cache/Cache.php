@@ -13,10 +13,10 @@
 
 namespace despote\kernel\cache;
 
-use \despote\base\Icache;
+use \despote\base\Idata;
 use \despote\base\Service;
 
-abstract class Cache extends Service implements Icache
+abstract class Cache extends Service implements Idata
 {
     // 添加缓存数据接口规范
     abstract public function add($key, $value, $expiry = 0);

@@ -13,7 +13,7 @@
 
 namespace despote\base;
 
-interface Icache
+interface Idata
 {
     // 添加数据接口规范
     function add($key, $value, $expiry = 99999999);

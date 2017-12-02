@@ -66,6 +66,11 @@ class Despote
                 'gc'    => 50,
                 'path'  => PATH_CACHE,
             ],
+            'cookie'    => [
+                'class' => 'despote\kernel\Cookie',
+                'safe'  => true,
+                'key'   => 'Despote',
+            ],
         ];
         // 加载系统服务
         self::$services = array_merge($core, $services);

@@ -74,8 +74,18 @@ return [
     // 日志记录
     'logger'    => [
         'class' => '\despote\kernel\Logger',
+        // 日志存放位置
         'path'  => PATH_LOG,
+        // 日志等级
         'limit' => 5,
+    ],
+    // cookie 操作类
+    'cookie'    => [
+        'class' => 'despote\kernel\Cookie',
+        // 是否开启安全模式
+        'safe'  => true,
+        // 加密的密钥
+        'key'   => 'Despote',
     ],
     // // 反向代理设置
     // 'proxy'     => [
@@ -92,8 +102,9 @@ return [
     'fileCache' => [
         'class' => 'despote\kernel\cache\FileCache',
         // 缓存路径
-        'gc'    => 50,
         'path'  => PATH_CACHE,
+        // 缓存 GC 设置
+        'gc'    => 50,
     ],
     // MemCache
     'memCache'  => [
