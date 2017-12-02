@@ -87,6 +87,7 @@ return [
         // 加密的密钥
         'key'   => 'Despote',
     ],
+    'session'   => 'despote\kernel\Session',
     // // 反向代理设置
     // 'proxy'     => [
     //     'class'  => '\despote\kernel\Proxy',
