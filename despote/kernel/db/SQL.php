@@ -260,10 +260,11 @@ class SQL extends Service
         }
 
         // 无缓存处理
-        $res = $this->execsql($sql, 'select', $data);
-        $this->cache && $cache->set($sql, $res->fetchAll());
+        $res    = $this->execsql($sql, 'select', $data);
+        $result = $res->fetchAll();
+        $this->cache && $cache->set($sql, $result);
 
-        return $res;
+        return $result;
     }
 
     ////////////////
