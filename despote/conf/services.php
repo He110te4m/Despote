@@ -14,8 +14,12 @@ return [
     // 路由组件
     'router'    => [
         'class'      => '\despote\kernel\Router',
+        // 模块绑定，使用了模块绑定后 URL 中不需要加上模块名，变成：/controller/action
+        // 如果设置为 false，当需要给默认模块的 action 传参或者使用非默认模块时，必须加上模块名
+        // 本参数默认为 true
+        'bindModule' => false,
         // 默认模块
-        'module'     => 'Home',
+        'module'     => 'Admin',
         // 默认控制器
         'controller' => 'Index',
         // 默认 Action
@@ -40,10 +44,13 @@ return [
         // 'pwd'   => 'root',
 
         // 数据库名，默认为 test
-        'name'  => 'despote',
+        'name'  => 'blog',
 
-        // // 开启数据库缓存，默认开启
-        // 'cache' => true,
+        // 开启数据库缓存，默认开启
+        'cache' => false,
+
+        // // 数据库缓存时间，默认为 86400，即 1 天
+        // 'expiry' => 86400,
 
         // // 是否开启持久连接，默认为 true
         // 'pconn' => true,

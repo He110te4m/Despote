@@ -57,8 +57,11 @@ class Router extends Service
         parse_str(isset($urlInfo['query']) ? $urlInfo['query'] : '', $_GET);
 
         // 路由匹配
-        $pathInfo   = empty($path) ? [] : explode('/', $path);
-        $module     = ($this->bindModule || empty($pathInfo)) ? $this->module : array_shift($pathInfo);
+        $pathInfo = empty($path) ? [] : explode('/', $path);
+
+        // 当 URL 参数少于三个，则必定是 domain/controller/action 这种形式，所以直接使用默认模块
+        // 当 URL 参数大于等于三个，必定是传参或者是 domain/moduel/controller/action，为了规范，当需要传参是时候，必须编写完整 URL，或者使用 get/post 传参
+        $module     = (count($pathInfo) < 3) ? $this->module : ($this->bindModule ? $this->module : array_shift($pathInfo));
         $controller = empty($pathInfo) ? $this->controller : array_shift($pathInfo);
         $action     = empty($pathInfo) ? $this->action : array_shift($pathInfo);
 

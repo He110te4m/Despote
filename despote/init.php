@@ -13,6 +13,9 @@ define('DS', DIRECTORY_SEPARATOR);
 // 路径定义 //
 ////////////
 
+// 静态资源相对路径
+define('RES', '/static/');
+
 // 根目录
 define('PATH_ROOT', dirname(__DIR__) . DS);
 

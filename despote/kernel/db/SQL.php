@@ -31,9 +31,13 @@ class SQL extends Service
     ////////////////
 
     // 数据库类型
-    protected $type  = 'mysql';
+    protected $type = 'mysql';
+    // 是否缓存
     protected $cache = true;
-    private $event   = [
+    // 缓存时间
+    protected $expiry = 86400;
+    // 事件集
+    private $event = [
         'BEFORE_INSERT' => '',
         'BEFORE_DELETE' => '',
         'BEFORE_UPDATE' => '',
@@ -262,7 +266,7 @@ class SQL extends Service
         // 无缓存处理
         $res    = $this->execsql($sql, 'select', $data);
         $result = $res->fetchAll();
-        $this->cache && $cache->set($sql, $result);
+        $this->cache && $cache->set($sql, $result, $this->expiry);
 
         return $result;
     }

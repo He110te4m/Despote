@@ -13,14 +13,14 @@
 
 namespace despote\base;
 
-use Despote;
-use despote\base\Service;
+use \Despote;
+use \despote\base\Service;
 
 class View extends Service
 {
     protected function init()
     {
-        defined('PATH_RES') || define('PATH_RES', Despote::request()->getHost() . 'static' . DS);
+        defined('RES') || define('RES', '/static/');
     }
 
     public function render($viewName = '', $viewParams = [], $layoutName = '', $layoutParams = [])
