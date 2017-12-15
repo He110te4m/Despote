@@ -79,6 +79,16 @@ class Upload extends Service
         }
     }
 
+    public function getOriginName()
+    {
+        return $this->originName;
+    }
+
+    public function getNewFileName()
+    {
+        return $this->newFileName;
+    }
+
     /**
      * 上传文件
      * @param  String  $name     源文件名字
@@ -89,17 +99,13 @@ class Upload extends Service
     private function uploadFile($name, $tmp_name, $size, $error)
     {
         // 保存文件信息，便于后续操作
-        echo $this->setInfo($name, $tmp_name, $size, $error);
-        echo "<br>";
+        $this->setInfo($name, $tmp_name, $size, $error);
         // 校验文件大小和文件后缀
-        echo $this->verify();
-        echo "<br>";
+        $this->verify();
         // 获取新文件名
-        echo $this->setNewFileName();
-        echo "<br>";
+        $this->setNewFileName();
         // 保存文件
-        echo $this->saveFile();
-        echo "<br>";
+        $this->saveFile();
     }
 
     /**
