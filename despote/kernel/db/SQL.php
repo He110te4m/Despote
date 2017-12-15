@@ -248,7 +248,7 @@ class SQL extends Service
      * @param  array    $data       条件中涉及的变量
      * @return Object               执行 SQL 后的记录集对象
      */
-    public function select($colName, $table, $condition = '', $data = [])
+    public function select($colName, $table, $condition = '', $data = [], $unCache = false)
     {
         $sql = "SELECT $colName FROM $table $condition";
 
@@ -258,6 +258,9 @@ class SQL extends Service
         // 缓存处理
         if ($this->cache) {
             $cache = Despote::fileCache();
+
+            $unCache && $cache->del($unCache);
+            // 需要加上序列化后的 data 数组
             if ($cache->has($sql)) {
                 return $cache->get($sql);
             }

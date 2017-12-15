@@ -19,7 +19,7 @@ return [
         // 本参数默认为 true
         'bindModule' => false,
         // 默认模块
-        'module'     => 'Admin',
+        'module'     => 'Home',
         // 默认控制器
         'controller' => 'Index',
         // 默认 Action
