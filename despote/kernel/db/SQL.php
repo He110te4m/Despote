@@ -259,9 +259,8 @@ class SQL extends Service
         if ($this->cache) {
             $cache = Despote::fileCache();
 
-            $unCache && $cache->del($unCache);
             // 需要加上序列化后的 data 数组
-            if ($cache->has($sql)) {
+            if (!$unCache && $cache->has($sql)) {
                 return $cache->get($sql);
             }
         }
@@ -269,7 +268,7 @@ class SQL extends Service
         // 无缓存处理
         $res    = $this->execsql($sql, 'select', $data);
         $result = $res->fetchAll();
-        $this->cache && $cache->set($sql, $result, $this->expiry);
+        ($this->cache && !$unCache) && $cache->set($sql, $result, $this->expiry);
 
         return $result;
     }
