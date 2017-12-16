@@ -49,7 +49,7 @@ class Session extends Service
      */
     public function get($key)
     {
-        return isset($_SESSION[$key]) ? $value : null;
+        return isset($_SESSION[$key]) ? $_SESSION[$key] : null;
     }
 
     /**
