@@ -155,7 +155,7 @@ class SQL extends Service
      * @param  array  $data 如果传入的 SQL 语句带有预处理，则必须传入该参数，用于赋值给预处理变量
      * @return Mixed        如果执行成功，返回记录集对象；处理失败返回 false
      */
-    public function execSQL($sql, $event, $data = [])
+    public function execSQL($sql, $event = 'select', $data = [])
     {
         if ($data === []) {
             // 直接返回结果
