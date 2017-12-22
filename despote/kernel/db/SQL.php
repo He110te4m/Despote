@@ -266,7 +266,12 @@ class SQL extends Service
         }
 
         // 无缓存处理
-        $res    = $this->execsql($sql, 'select', $data);
+        $res = $this->execsql($sql, 'select', $data);
+        if ($res === false) {
+            throw new \Exception("SQL 语句执行失败", 500);
+            return;
+        }
+
         $result = $res->fetchAll();
         ($this->cache && !$unCache) && $cache->set($sql, $result, $this->expiry);
 
