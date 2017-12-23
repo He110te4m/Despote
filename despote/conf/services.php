@@ -138,4 +138,5 @@ return [
             ],
         ],
     ],
+    'md'        => '\despote\Extend\Parser',
 ];
