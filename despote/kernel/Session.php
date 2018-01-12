@@ -19,7 +19,7 @@ class Session extends Service
 {
     public function init()
     {
-        session_status() === PHP_SESSION_ACTIVE || session_start();
+        isset($_SESSION) || session_start();
     }
 
     /**

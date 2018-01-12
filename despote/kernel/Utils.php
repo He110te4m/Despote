@@ -240,19 +240,20 @@ class Utils
     public static function createFile($file, $isDir = false, $mode = 0775)
     {
         // 如果是目录，就判断目录是否不存在，如果是文件，就判断文件所在的目录是否不存在，只要有一个条件满足，就创建目录
-        if ((isDir && !is_dir($file)) || (!isDir && !is_dir(dirname($file)))) {
+        if (($isDir && !is_dir($file)) || (!$isDir && !is_dir(dirname($file)))) {
+            $mdir = is_dir($file) ? $file : dirname($file);
             // 创建文件并给权限
             @mkdir($mdir, $mode, true);
             @chmod($mdir, $mode);
         }
 
         // 前面的 if 保证目录肯定存在，如果需要的是目录，可以直接返回了
-        if (isDir) {
+        if ($isDir) {
             return true;
         }
 
         // 创建空文件，如果成功，返回 true
-        $fileHandle = @fopen($path, 'w');
+        $fileHandle = @fopen($file, 'w');
         if ($fileHandle) {
             fclose($fileHandle);
             return true;

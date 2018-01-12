@@ -139,4 +139,8 @@ return [
         ],
     ],
     'md'        => '\despote\Extend\Parser',
+    'tpl'       => [
+        'class'  => '\despote\kernel\Tpl',
+        'module' => 'Home',
+    ],
 ];
