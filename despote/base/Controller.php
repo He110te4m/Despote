@@ -30,7 +30,12 @@ class Controller extends Service
         return $this->view;
     }
 
-    protected function render($viewName = '', $viewParams = [], $layoutName = '', $layoutParams = [])
+    protected function assign($key, $value)
+    {
+        $this->getView()->assign($key, $value);
+    }
+
+    protected function render($viewName = 'index.php', $viewParams = [], $layoutName = '', $layoutParams = [])
     {
         // 默认使用 index.php 为视图
         empty($viewName) && $viewName = 'index.php';

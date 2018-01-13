@@ -21,7 +21,10 @@ class Tpl extends Service
     /////////////
     // 模板配置 //
     ////////////
+    // 模板所在模块名
     public $module;
+    // // 模板内部变量
+    // private $vars = [];
     // 模板路径，默认为视图路径
     private $tplDir;
     // 缓存路径，默认为视图路径下的 cache 文件夹
@@ -69,6 +72,11 @@ class Tpl extends Service
         require $cache;
     }
 
+    // public function assign($key, $value)
+    // {
+    //     $this->vars[$key] = $value;
+    // }
+
     /**
      * 获取模板绝对路径
      * @param  String $filename 模板文件名
@@ -84,7 +92,7 @@ class Tpl extends Service
      * @param  String $filename 缓存文件名
      * @return String           缓存文件绝对路径
      */
-    private function getCache($filename)
+    public function getCache($filename)
     {
         return $this->cacheDir . DS . $filename . '.php';
     }
@@ -288,8 +296,8 @@ class Tpl extends Service
             }
         }
 
-        // 解析变量
-        $regular = '/' . $begin . '$(\w+)' . $end . '/';
+        // 解析变量定义
+        $regular = '/' . $begin . '((\$[\w\.\[\]\$]+)=\s*([\'"].+?[\'"]|.+?))' . $end . '/';
         if (preg_match_all($regular, $content, $results)) {
             foreach ($results[0] as $index => $varTpl) {
                 $varCache = '<?php ' . $this->parseVars($results[1][$index]) . '; ?>';
