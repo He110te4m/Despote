@@ -25,32 +25,24 @@ return [
         // 默认 Action
         'action'     => 'index',
     ],
-    // SQL 数据库操作类
+    // MySQL
     'sql'       => [
-        'class' => '\despote\kernel\db\SQL',
-        // // 数据库类型，暂仅支持 MySQL
-        // 'type'  => 'mysql',
+        'class' => '\despote\kernel\db\MySQL',
 
-        // // 数据库地址，默认为 localhost
-        // 'host'  => 'localhost',
+        // 数据库地址，默认为 localhost
+        'host'  => 'localhost',
 
-        // // 数据库端口，默认为 3306
-        // 'port'  => 3306,
+        // 数据库端口，默认为 3306
+        'port'  => 3306,
 
-        // // 数据库用户名，默认为 root
-        // 'usr'   => 'root',
+        // 数据库用户名，默认为 root
+        'usr'   => 'root',
 
-        // // 数据库密码，默认为 root
-        // 'pwd'   => 'root',
+        // 数据库密码，默认为 root
+        'pwd'   => 'root',
 
         // 数据库名，默认为 test
-        'name'  => 'blog',
-
-        // 开启数据库缓存，默认开启
-        'cache' => false,
-
-        // // 数据库缓存时间，默认为 86400，即 1 天
-        // 'expiry' => 86400,
+        'name'  => 'test',
 
         // // 是否开启持久连接，默认为 true
         // 'pconn' => true,

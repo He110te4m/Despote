@@ -17,6 +17,6 @@ class Index extends Controller
 {
     public function index()
     {
-        \Despote::tpl()->display('index');
+        $this->render('index.php');
     }
 }

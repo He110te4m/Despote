@@ -17,14 +17,14 @@ use \despote\base\Service;
 use \Event;
 use \PDO;
 
-class SQL extends Service
+class MySQL extends Service
 {
     /////////////
     // 单例对象 //
     /////////////
 
     // PDO 对象
-    private $pdo;
+    private $pdo = [];
 
     ////////////////
     // 数据库配置 //
@@ -105,44 +105,9 @@ class SQL extends Service
     // 是否开启持久连接，在多进程服务器（如fastcgi、php-fpm）中，使用数据库持久连接可以提升服务器性能和抗压能力，可选
     protected $pconn = true;
 
-    /////////////////
-    // SQLite 配置 //
-    /////////////////
-    // 数据库地址
-    protected $file;
-    // 是否开启强制磁盘同步
-    // 可选值为：
-    //   FULL  (完全磁盘同步：断电或死机不会损坏数据库，但是很慢)
-    //   NORMAL(普通磁盘同步：大部分情况天断电或死机不会损坏数据库，比 OFF 慢)
-    //   OFF   (不强制磁盘同步：断电或死机后很容易损坏数据库，但是插入或更新速度比 FULL 提升 50 倍，由系统自行将更改写入数据库中而不强制同步到磁盘)
-    protected $sync = 'OFF';
-
     protected function init()
     {
-        $pdo = &$this->pdo;
-        switch ($this->type) {
-            case 'mysql':
-                // 创建 PDO 对象
-                $pdo = new PDO('mysql:dbname=' . $this->name . ';host=' . $this->host . ';port=' . $this->port, $this->usr, $this->pwd, $this->opts);
-                break;
-
-            case 'sqlite':
-                $pdo = new PDO('sqlite:' . $this->file);
-                $pdo->exec('PRAGMA synchronous=' . $this->sync);
-                break;
-
-            default:
-                throw new \Exception('暂不支持 ' . $this->type . ' 类型的数据库', 500);
-                break;
-        }
-        // 设置默认字符集
-        $pdo->exec('SET NAMES ' . $this->charset);
-        // 设置以报错形式
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, $this->errModeList[$this->errMode]);
-        // 设置 fetch 时返回数据形式
-        $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, $this->fetchList[$this->fetch]);
-        // 设置是否启用模拟预处理
-        $pdo->setAttribute(PDO::ATTR_EMULATE_PREPARES, $this->pretreat);
+        $this->conn($this->name);
     }
 
     /////////////
@@ -155,14 +120,16 @@ class SQL extends Service
      * @param  array  $data 如果传入的 SQL 语句带有预处理，则必须传入该参数，用于赋值给预处理变量
      * @return Mixed        如果执行成功，返回记录集对象；处理失败返回 false
      */
-    public function execSQL($sql, $event = 'select', $data = [])
+    public function execSQL($sql, $event = 'select', $data = [], $name = '')
     {
+        $pdo = $this->getIns($name);
+
         if ($data === []) {
             // 直接返回结果
-            $res = $this->pdo->query($sql);
+            $res = $pdo->query($sql);
         } else {
             // 对 SQL 语句进行预处理
-            $res = $this->pdo->prepare($sql);
+            $res = $pdo->prepare($sql);
             // 如果预处理失败则直接返回
             if (!$res) {
                 return false;
@@ -185,7 +152,7 @@ class SQL extends Service
      * @param  array    $data       要插入的值，与字段一一对应
      * @return Object               执行 SQL 后返回的记录集
      */
-    public function insert($table, $colName, $data = [])
+    public function insert($table, $colName, $data = [], $name = '')
     {
         $value = "VALUES(?)";
         if (strpos($colName, ',') !== false) {
@@ -202,7 +169,7 @@ class SQL extends Service
         // 触发 before 事件
         Event::trigger('BEFORE_INSERT');
 
-        return $this->execsql($sql, 'insert', $data);
+        return $this->execsql($sql, 'insert', $data, $name);
     }
 
     /**
@@ -212,14 +179,14 @@ class SQL extends Service
      * @param  Array    $data       条件中涉及的变量
      * @return Object               执行 SQL 后的记录集对象
      */
-    public function delete($table, $condition, $data = [])
+    public function delete($table, $condition, $data = [], $name = '')
     {
         $sql = "DELETE FROM $table $condition";
 
         // 触发 before 事件
         Event::trigger('BEFORE_DELETE');
 
-        return $this->execsql($sql, 'delete', $data);
+        return $this->execsql($sql, 'delete', $data, $name);
     }
 
     /**
@@ -230,14 +197,14 @@ class SQL extends Service
      * @param  Array    $data       更新的数据和更新条件中涉及的变量
      * @return Object               执行 SQL 后的记录集对象
      */
-    public function update($table, $set, $condition, $data = [])
+    public function update($table, $set, $condition, $data = [], $name = '')
     {
         $sql = "UPDATE $table SET $set $condition";
 
         // 触发 before 事件
         Event::trigger('BEFORE_UPDATE');
 
-        return $this->execsql($sql, 'update', $data);
+        return $this->execsql($sql, 'update', $data, $name);
     }
 
     /**
@@ -248,34 +215,62 @@ class SQL extends Service
      * @param  array    $data       条件中涉及的变量
      * @return Object               执行 SQL 后的记录集对象
      */
-    public function select($colName, $table, $condition = '', $data = [], $unCache = false)
+    public function select($colName, $table, $condition = '', $data = [], $name = '')
     {
         $sql = "SELECT $colName FROM $table $condition";
 
         // 触发 before 事件
         Event::trigger('BEFORE_SELECT');
 
-        // 缓存处理
-        if ($this->cache) {
-            $cache = Despote::fileCache();
-
-            // 需要加上序列化后的 data 数组
-            if (!$unCache && $cache->has($sql)) {
-                return $cache->get($sql);
-            }
-        }
-
         // 无缓存处理
-        $res = $this->execsql($sql, 'select', $data);
+        $res = $this->execsql($sql, 'select', $data, $name);
         if ($res === false) {
-            throw new \Exception("SQL 语句执行失败", 500);
+            throw new \Exception("SQL 语句：{$sql} 查询失败", 500);
             return;
         }
 
-        $result = $res->fetchAll();
-        ($this->cache && !$unCache) && $cache->set($sql, $result, $this->expiry);
+        return $res;
+    }
 
-        return $result;
+    public function getIns($name = '')
+    {
+        if (empty($name)) {
+            return $this->pdo[$this->name];
+        } else {
+            return $this->pdo[$name];
+        }
+    }
+
+    public function getLastID($name = '')
+    {
+        if (empty($name)) {
+            return $this->getIns($name)->lastInsertId();
+        }
+    }
+
+    public function conn($name)
+    {
+        // 引用变量节省代码量
+        $pdo = &$this->pdo;
+
+        // 存放 PDO 单例
+        $pdo[$name] = new PDO('mysql:dbname=' . $name . ';host=' . $this->host . ';port=' . $this->port, $this->usr, $this->pwd, $this->opts);
+
+        // 设置默认字符集
+        $pdo[$name]->exec('SET NAMES ' . $this->charset);
+        // 设置以报错形式
+        $pdo[$name]->setAttribute(PDO::ATTR_ERRMODE, $this->errModeList[$this->errMode]);
+        // 设置 fetch 时返回数据形式
+        $pdo[$name]->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, $this->fetchList[$this->fetch]);
+        // 设置是否启用模拟预处理
+        $pdo[$name]->setAttribute(PDO::ATTR_EMULATE_PREPARES, $this->pretreat);
+    }
+
+    public function setName($name)
+    {
+        $this->name = $name;
+        // 如果这个数据库没有连接上，则创建连接
+        isset($this->pdo[$name]) || $this->conn($name);
     }
 
     ////////////////
