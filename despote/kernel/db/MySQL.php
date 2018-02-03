@@ -30,12 +30,6 @@ class MySQL extends Service
     // 数据库配置 //
     ////////////////
 
-    // 数据库类型
-    protected $type = 'mysql';
-    // 是否缓存
-    protected $cache = true;
-    // 缓存时间
-    protected $expiry = 86400;
     // 事件集
     private $event = [
         'BEFORE_INSERT' => '',
@@ -237,6 +231,9 @@ class MySQL extends Service
         if (empty($name)) {
             return $this->pdo[$this->name];
         } else {
+            if (!isset($this->pdo[$name])) {
+                $this->conn($name);
+            }
             return $this->pdo[$name];
         }
     }
@@ -266,11 +263,42 @@ class MySQL extends Service
         $pdo[$name]->setAttribute(PDO::ATTR_EMULATE_PREPARES, $this->pretreat);
     }
 
-    public function setName($name)
+    public function setDB($name)
     {
         $this->name = $name;
         // 如果这个数据库没有连接上，则创建连接
         isset($this->pdo[$name]) || $this->conn($name);
+    }
+
+    /////////////
+    // 事务相关 //
+    /////////////
+
+    /**
+     * 开始事务
+     * @param  string $name 开启事务的数据库名
+     */
+    public function begin($name = '')
+    {
+        $this->getIns($name)->beginTransaction();
+    }
+
+    /**
+     * 提交事务
+     * @param  string $name 提交事务的数据库名
+     */
+    public function commit($name = '')
+    {
+        $this->getIns($name)->commit();
+    }
+
+    /**
+     * 回滚事务
+     * @param  string $name 回滚事务的数据库名
+     */
+    public function back($name = '')
+    {
+        $this->getIns($name)->rollBack();
     }
 
     ////////////////
