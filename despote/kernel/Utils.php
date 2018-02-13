@@ -216,7 +216,7 @@ class Utils
         // 屏蔽系统错误提示
         ini_set('display_errors', 'Off');
         error_reporting(0);
-        self::config('error_catch') && Event::trigger('ERROR_CATCH_ON');
+        Event::trigger('ERROR_CATCH_ON', self::config('error_catch'));
     }
 
     public static function config($name, $defaultValue = '')

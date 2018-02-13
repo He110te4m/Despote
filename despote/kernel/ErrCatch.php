@@ -17,21 +17,36 @@ use \Utils;
 
 class ErrCatch extends Service
 {
-    public static function register()
+    public static function register($debug = true)
     {
         $obj = new static;
-        // 自定义异常处理
-        set_exception_handler([$obj, 'onException']);
-        // 自定义错误处理
-        set_error_handler([$obj, 'onError']);
-        // 自定义致命错误处理
-        register_shutdown_function([$obj, 'onShutdown']);
+        if ($debug) {
+            // 自定义异常处理
+            set_exception_handler([$obj, 'onException']);
+            // 自定义错误处理
+            set_error_handler([$obj, 'onError']);
+            // 自定义致命错误处理
+            register_shutdown_function([$obj, 'onShutdown']);
+        } else {
+            // 自定义异常处理
+            set_exception_handler([$obj, 'noFound']);
+            // 自定义错误处理
+            set_error_handler([$obj, 'noFound']);
+            // 自定义致命错误处理
+            register_shutdown_function([$obj, 'noFound']);
+        }
     }
 
     public static function unregister()
     {
         restore_error_handler();
         restore_exception_handler();
+    }
+
+    public function noFound()
+    {
+        header('location: /404.html');
+        die;
     }
 
     /**

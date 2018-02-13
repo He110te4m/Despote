@@ -13,7 +13,6 @@
 
 namespace despote\kernel;
 
-// use despote\base\Idata;
 use \despote\base\Service;
 use \Exception;
 use \Utils;
@@ -59,7 +58,7 @@ class Cookie extends Service
         }
         // 设置 cookie
         $expire += time();
-        setcookie($key, $value, $expire);
+        setcookie($key, $value, $expire, '/');
     }
 
     /**
@@ -91,7 +90,7 @@ class Cookie extends Service
      */
     public function del($key)
     {
-        setcookie($key, '', time() - 1);
+        setcookie($key, '', time() - 1, '/');
     }
 
     /**

@@ -42,7 +42,7 @@ return [
         'pwd'   => 'root',
 
         // 数据库名，默认为 test
-        'name'  => 'test',
+        'name'  => 'blog',
 
         // // 是否开启持久连接，默认为 true
         // 'pconn' => true,
@@ -130,7 +130,7 @@ return [
             ],
         ],
     ],
-    'md'        => '\despote\Extend\Parser',
+    'md'        => '\despote\Extend\Parsedown',
     'tpl'       => [
         'class'  => '\despote\kernel\Tpl',
         'module' => 'Home',
