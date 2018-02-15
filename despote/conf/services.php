@@ -130,9 +130,14 @@ return [
             ],
         ],
     ],
-    'md'        => '\despote\Extend\Parsedown',
-    'tpl'       => [
-        'class'  => '\despote\kernel\Tpl',
-        'module' => 'Home',
+    'md'        => '\despote\extend\Parsedown',
+    // 'tpl'       => [
+    //     'class'  => '\despote\kernel\Tpl',
+    //     'module' => 'Home',
+    // ],
+    'token'     => [
+        'class'  => '\despote\kernel\Token',
+        // 加密的密钥
+        'secret' => 'Despote',
     ],
 ];

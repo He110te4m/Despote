@@ -17,20 +17,6 @@ class Index extends Controller
 {
     public function index()
     {
-        $db = \Despote::sql();
-
-        $res = $db->select('`id`', '`a`');
-        echo "<br>";
-        var_dump($db->fetchAll($res));
-        echo "<br>";
-
-        $db->insert('`a`', 'id', [10]);
-
-        $res = $db->select('`id`', '`a`');
-        echo "<br>";
-        var_dump($db->fetchAll($res));
-        echo "<br>";
-
-        // $this->render('index.php');
+        $this->render('index.php');
     }
 }
