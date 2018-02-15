@@ -95,8 +95,8 @@ class ErrCatch extends Service
 
         // 输出错误信息
         echo <<<EOF
-<div style="font-family: 'Consolas'; width: 100%; border: 1px solid #000;">
-    <h1 style="margin: 0; padding: 5px 10px; font-size: 18px; border-bottom: 1px solid #000;">
+<div style="font-family: 'Consolas'; border: 1px solid #000; z-index: 99999; position: fixed; top: 0; left: 0; right: 0;">
+    <h1 style="margin: 0; padding: 5px 10px; font-size: 18px; border-bottom: 1px solid #000; background-color: #fff;">
         An $type occurred while Despote running.
     </h1>
     <ul style="list-style: none; padding: 5px 10px; margin: 0; font-size: 16px; background-color: #000; color: #fff;">

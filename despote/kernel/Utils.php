@@ -75,7 +75,7 @@ class Utils
         }
 
         // 计算运行时间
-        $useMemory = self::$memories[$len - 1]['memory'] - self::$memories[0]['memory'] / 2062336;
+        $useMemory = (self::$memories[$len - 1]['memory'] - self::$memories[0]['memory']) / 2062336;
 
         return $useMemory;
     }
@@ -216,7 +216,7 @@ class Utils
         // 屏蔽系统错误提示
         ini_set('display_errors', 'Off');
         error_reporting(0);
-        Event::trigger('ERROR_CATCH_ON', self::config('error_catch'));
+        Event::trigger('ERROR_CATCH_ON', self::config('error_catch', true));
     }
 
     public static function config($name, $defaultValue = '')
