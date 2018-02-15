@@ -336,4 +336,44 @@ class MySQL extends Service
             $this->hook($event, $func);
         }
     }
+
+    ////////////////////
+    // 使用缓存获取数据 //
+    ///////////////////
+
+    /**
+     * 获取单条数据
+     * @param  Object  $res    PDOStatement 对象
+     * @param  integer $expiry 缓存有效期，默认为一天，即 86400 秒
+     * @return Object          获取的行数据
+     */
+    public function fetch($res, $expiry = 86400)
+    {
+        $cache = Despote::fileCache();
+
+        $result = $cache->get($res->queryString);
+        if (!$result) {
+            $result = $res->fetch();
+            $cache->set($res->queryString, $result, $expiry);
+        }
+        return $result;
+    }
+
+    /**
+     * 获取多条数据
+     * @param  Object  $res    PDOStatement 对象
+     * @param  integer $expiry 缓存有效期，默认为一天，即 86400 秒
+     * @return Array           获取的所有行数据
+     */
+    public function fetchAll($res, $expiry = 86400)
+    {
+        $cache = Despote::fileCache();
+
+        $result = $cache->get($res->queryString);
+        if (!$result) {
+            $result = $res->fetchAll();
+            $cache->set($res->queryString, $result, $expiry);
+        }
+        return $result;
+    }
 }

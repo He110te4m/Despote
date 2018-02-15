@@ -29,20 +29,20 @@ return [
     'sql'       => [
         'class' => '\despote\kernel\db\MySQL',
 
-        // 数据库地址，默认为 localhost
-        'host'  => 'localhost',
+        // // 数据库地址，默认为 localhost
+        // 'host'  => 'localhost',
 
-        // 数据库端口，默认为 3306
-        'port'  => 3306,
+        // // 数据库端口，默认为 3306
+        // 'port'  => 3306,
 
-        // 数据库用户名，默认为 root
-        'usr'   => 'root',
+        // // 数据库用户名，默认为 root
+        // 'usr'   => 'root',
 
-        // 数据库密码，默认为 root
-        'pwd'   => 'root',
+        // // 数据库密码，默认为 root
+        // 'pwd'   => 'root',
 
-        // 数据库名，默认为 test
-        'name'  => 'blog',
+        // // 数据库名，默认为 test
+        // 'name'  => 'blog',
 
         // // 是否开启持久连接，默认为 true
         // 'pconn' => true,
