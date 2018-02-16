@@ -1,11 +1,11 @@
 {
-	"name": "He110te4m/Despote",
+	"name": "he110te4m/despote",
 	"description": "a PHP MVC Framework",
 	"type": "project",
 	"keywords": ["PHP", "Framework", "MVC", "Despote"],
-	"homepage": "https://github.com/He110te4m/Despote3.0",
+	"homepage": "https://github.com/He110te4m/Despote",
 	"time": "2018-02-16",
-	"license": "MIT",
+	"license": "GPL-3.0-or-later",
 	"authors": [
 		{"name": "He110te4m", "email": "i@he110.info", "homepage": "http://blog.he110.info", "role": "Developer"}
 	],
