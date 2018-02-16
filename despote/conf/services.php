@@ -26,7 +26,7 @@ return [
     //     'action'     => 'index',
     // ],
     // MySQL
-    'sql'     => [
+    'sql' => [
         'class' => '\despote\kernel\db\MySQL',
 
         // // 数据库地址，默认为 localhost
@@ -86,7 +86,8 @@ return [
     //     // 加密的密钥
     //     'key'   => 'Despote',
     // ],
-    'session' => 'despote\kernel\Session',
+    // // session 操作类
+    // 'session' => 'despote\kernel\Session',
     // // 反向代理设置
     // 'proxy'     => [
     //     'class'  => '\despote\kernel\Proxy',

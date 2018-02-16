@@ -18,9 +18,9 @@ use \despote\base\Service;
 class File extends Service
 {
     /**
-     * 创建文件或文件夹
-     * @param  String  $file  文件绝对地址(文件夹属于特殊文件)
-     * @param  boolean $isDir 是否是文件夹，默认为 false
+     * 创建文件或目录
+     * @param  String  $file  文件绝对地址(目录属于特殊文件)
+     * @param  boolean $isDir 是否是目录，默认为 false
      * @param  integer $mode  文件权限
      * @return Boolean        创建成功返回 true，创建失败返回 false
      */
@@ -87,5 +87,87 @@ class File extends Service
         }
 
         return $content;
+    }
+
+    /**
+     * 获取文件大小
+     * @param  String $filename 文件所在路径，支持中文，支持目录（传入目录时会递归子目录）
+     * @return String           文件大小，包含单位
+     */
+    public function getSize($filename)
+    {
+        // 定义处理的单位和对应的每单位的字节大小
+        $units = ['GB', 'MB', 'KB', 'B'];
+        $vals  = [1073741824, 1048576, 1024, 1];
+        $size  = 0;
+
+        // 兼容中文处理
+        $filename = iconv('utf-8', 'gbk', $filename);
+        // 获取文件大小
+        $num = 0;
+
+        // 统计文件/目录大小
+        if (file_exists($filename)) {
+            if (is_dir($filename)) {
+                $num  = 0;
+                $list = $this->listDir($filename);
+                foreach ($list as $item) {
+                    $num += filesize($item);
+                }
+            }
+            if (is_file($filename)) {
+                $num = filesize($filename);
+            }
+        }
+
+        // 单位转换
+        foreach ($vals as $index => $item) {
+            $temp = floor($num / $item);
+            if ($temp > 0) {
+                $size = round($num / $item, 2) . $units[$index];
+                break;
+            }
+        }
+
+        return $size;
+    }
+
+    /**
+     * 遍历目录下所有文件，包括子目录里的文件
+     * @param  String $dir 目录路径
+     * @return Array       文件数组，该数组为一维的，数组元素为文件的完整路径
+     */
+    public function listDir($dir)
+    {
+        $files = [];
+
+        // 是目录才遍历
+        if (is_dir($dir)) {
+            // 打开目录，获取句柄
+            if ($handle = opendir($dir)) {
+                // 循环读取文件和目录
+                while (false !== ($file = readdir($handle))) {
+                    // 排除特殊目录
+                    if ($file != '.' && $file != '..') {
+                        $filename = $dir . '/' . $file;
+                        // 如果是子目录就递归子目录
+                        if (is_file($filename)) {
+                            $files[] = $filename;
+                        } else {
+                            $files = array_merge($files, $this->listDir($filename));
+                        }
+                    }
+                }
+                closedir($handle);
+            }
+        }
+
+        return $files;
+    }
+
+    public function getSuffix($file)
+    {
+        // 如果不是文件，返回 false，如果是，返回扩展名
+        return is_file($file) ? pathinfo($file, PATHINFO_EXTENSION) : false;
     }
 }
