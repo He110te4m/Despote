@@ -1,0 +1,16 @@
+{
+	"name": "He110te4m/Despote",
+	"description": "a PHP MVC Framework",
+	"type": "project",
+	"keywords": ["PHP", "Framework", "MVC", "Despote"],
+	"homepage": "https://github.com/He110te4m/Despote3.0",
+	"time": "2018-02-16",
+	"license": "MIT",
+	"authors": [
+		{"name": "He110te4m", "email": "i@he110.info", "homepage": "http://blog.he110.info", "role": "Developer"}
+	],
+	"require":{
+		"php": ">=5.5.0",
+		"ext-pdo": "*"
+	}
+}
