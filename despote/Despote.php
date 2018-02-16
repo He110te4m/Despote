@@ -71,6 +71,13 @@ class Despote
                 'safe'  => true,
                 'key'   => 'Despote',
             ],
+            'logger'    => [
+                'class' => '\despote\kernel\Logger',
+                // 日志存放位置
+                'path'  => PATH_LOG,
+                // 日志等级
+                'limit' => 5,
+            ],
         ];
         // 加载系统服务
         self::$services = array_merge($core, $services);

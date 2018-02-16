@@ -11,6 +11,6 @@
  */
 
 return [
-    'error_catch' => 1,
+    'error_catch' => 0,
     'sys_info'    => 'Despote 3.0',
 ];

@@ -36,19 +36,25 @@ class Logger extends Service
         'error' => 2,
         // 系统致命错误，将导致脚本结束运行
         'fatal' => 1,
+        // 兼容传入数字方式
+        5       => 5,
+        4       => 4,
+        3       => 3,
+        2       => 2,
+        1       => 1,
     ];
     // 设置日志颜色
     private $color = [
         // 操作日志为绿色
-        'info'  => '#00FF00',
+        'info'  => '#0F0',
         // Debug 信息为默认颜色
-        'debug' => '#FFFFFF',
+        'debug' => '#FFF',
         // 警告为黄色
-        'warn'  => '#FFFF00',
+        'warn'  => '#FF0',
         // 系统错误为红色
-        'error' => '#FF0000',
+        'error' => '#F00',
         // 系统致命错误为红色
-        'fatal' => '#FF0000',
+        'fatal' => '#F00',
     ];
     // 日志文件头
     private $head = <<<EOF
