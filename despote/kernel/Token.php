@@ -15,6 +15,7 @@ namespace despote\kernel;
 
 use \Despote;
 use \despote\base\Service;
+use \Utils;
 
 class Token extends Service
 {
@@ -37,7 +38,7 @@ class Token extends Service
         $data   = base64_encode(json_encode($raw_data, JSON_UNESCAPED_UNICODE));
 
         $raw_sign = $header . ',' . $data;
-        $sign     = base64_encode(\Utils::encrypt($raw_sign, $this->secret));
+        $sign     = base64_encode(Utils::encrypt($raw_sign, $this->secret));
 
         return $raw_sign . ',' . $sign;
     }
@@ -62,7 +63,7 @@ class Token extends Service
         $raw_data   = json_decode(base64_decode($data), true);
         $raw_sign   = $header . ',' . $data;
 
-        $verify_sign = base64_encode(\Utils::encrypt($raw_sign, $this->secret));
+        $verify_sign = base64_encode(Utils::encrypt($raw_sign, $this->secret));
 
         return $verify_sign == $sign ? $raw_header['opera'] : false;
     }
@@ -88,7 +89,7 @@ class Token extends Service
         $raw_data   = json_decode(base64_decode($data), true);
         $raw_sign   = $header . ',' . $data;
 
-        $verify_sign = base64_encode(\Utils::encrypt($raw_sign, $this->secret));
+        $verify_sign = base64_encode(Utils::encrypt($raw_sign, $this->secret));
 
         return $verify_sign == $sign ? $raw_data : false;
     }

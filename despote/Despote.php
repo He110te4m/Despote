@@ -78,6 +78,7 @@ class Despote
                 // 日志等级
                 'limit' => 5,
             ],
+            'file'      => '\despote\kernel\File',
         ];
         // 加载系统服务
         self::$services = array_merge($core, $services);

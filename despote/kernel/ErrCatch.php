@@ -91,10 +91,10 @@ EOF;
     private function display($type, $errstr, $errfile, $errline)
     {
         // 获取错误追踪
-        $contents = Utils::getFileLine($errfile, [$errline - 5, $errline + 5]);
+        $contents = Despote::file()->getLine($errfile, [$errline - 5, $errline + 5]);
         $trace    = '<li> ' . implode(' </li><li> ', $contents) . ' </li>';
         // 获取错误代码行内容
-        $code = Utils::getFileLine($errfile, $errline);
+        $code = Despote::file()->getLine($errfile, $errline);
 
         // 输出错误信息
         echo <<<EOF

@@ -28,7 +28,7 @@ class FileCache extends Cache
         if (!$this->path) {
             $this->path = PATH_CACHE;
         } else if (!is_dir($this->path)) {
-            if (\Utils::createFile($this->path, true)) {
+            if (\Despote::file()->create($this->path, true)) {
                 throw new \Exception("创建文件缓存目录失败", 500);
             }
         }

@@ -91,7 +91,7 @@ EOF;
     {
         isset($this->path) || $this->path   = PATH_LOG;
         isset($this->limit) || $this->limit = 2;
-        is_dir($this->path) || \Utils::createFile($this->path, true);
+        is_dir($this->path) || \Despote::file()->create($this->path, true);
     }
 
     public function log($level, $msg)

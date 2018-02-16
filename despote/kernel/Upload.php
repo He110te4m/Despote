@@ -50,7 +50,7 @@ class Upload extends Service
     protected function init()
     {
         empty($this->path) && $this->error('存储路径未设置');
-        if (!is_dir($this->path) && !\Utils::createFile($this->path, true)) {
+        if (!is_dir($this->path) && !\Despote::file()->create($this->path, true)) {
             $this->error('创建目录失败，请手动创建目录');
         }
         is_writable($this->path) || $this->error('目录不可写，请先修改权限');
