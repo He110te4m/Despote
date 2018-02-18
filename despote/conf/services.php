@@ -26,7 +26,7 @@ return [
     //     'action'     => 'index',
     // ],
     // MySQL
-    'sql' => [
+    'sql'  => [
         'class' => '\despote\kernel\db\MySQL',
 
         // // 数据库地址，默认为 localhost
@@ -141,4 +141,29 @@ return [
     //     // 加密的密钥
     //     'secret' => 'Despote',
     // ],
+    'mail' => [
+        'class' => '\despote\extend\Mailer',
+        // // 使用的安全协议
+        // 'SMTPSecure' => 'ssl',
+        // // 邮件的字符编码
+        // 'charset'    => 'UTF-8',
+        // // 是否进行安全认证
+        // 'SMTPAuth'   => true,
+        // // 邮件服务器端口
+        // 'port'       => 25,
+        // // 邮件服务器地址
+        // 'host'       => 'smtp.exmail.qq.com',
+        // // 邮件服务器登陆的用户名
+        // 'user'       => 'i@he110.top',
+        // // 邮件服务器登陆的密码
+        // 'pwd'        => 'test',
+        // // 发送人邮箱
+        // 'form'       => 'i@he110.top',
+        // // 发送人姓名
+        // 'formname'   => 'He110',
+        // // 回复邮箱
+        // 'replyto'    => 'i@he110.top',
+        // // 回复姓名
+        // 'replyname'  => 'He110',
+    ],
 ];

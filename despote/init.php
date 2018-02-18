@@ -32,6 +32,8 @@ define('PATH_BASE', PATH_DESPOTE . 'base' . DS);
 define('PATH_CONF', PATH_DESPOTE . 'conf' . DS);
 // 框架核心文件目录
 define('PATH_KERNEL', PATH_DESPOTE . 'kernel' . DS);
+// 框架扩展文件目录
+define('PATH_EXTEND', PATH_DESPOTE . 'extend' . DS);
 
 // 缓存目录
 define('PATH_CACHE', PATH_DESPOTE . 'runtime' . DS . 'cache' . DS);
@@ -41,5 +43,5 @@ define('PATH_LOG', PATH_DESPOTE . 'runtime' . DS . 'log' . DS);
 // 定义视图文件访问校验
 define('DESPOTE', true);
 
-// 支持 composer 自动加载
+// 使用 composer 自动加载
 file_exists(PATH_ROOT . 'vendor' . DS . 'autoload.php') && require PATH_ROOT . 'vendor' . DS . 'autoload.php';
