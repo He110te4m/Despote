@@ -20,6 +20,7 @@ class Tpl extends Service
     /////////////
     // 模板配置 //
     ////////////
+
     // 模板所在模块名
     public $module;
     // // 模板内部变量
@@ -47,7 +48,7 @@ class Tpl extends Service
 
         // 加载模板引擎配置
         $conf = require PATH_CONF . 'tpl.php';
-        $path = PATH_APP . $this->module . DS . 'view' . DS;
+        $path = PATH_APP . $this->module . DS . 'tpl' . DS;
 
         // 使用配置文件初始化属性
         $this->tplDir   = isset($conf['tplDir']) ? $conf['tplDir'] : $path;

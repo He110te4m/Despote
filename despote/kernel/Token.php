@@ -93,4 +93,24 @@ class Token extends Service
 
         return $verify_sign == $sign ? $raw_data : false;
     }
+
+    public function get($token)
+    {
+        if (empty($token)) {
+            return false;
+        }
+        list($header, $data, $sign) = explode(',', $token);
+
+        if (empty($header) || empty($data) || empty($sign)) {
+            return false;
+        }
+
+        $raw_header = json_decode(base64_decode($header), true);
+        $raw_data   = json_decode(base64_decode($data), true);
+        $raw_sign   = $header . ',' . $data;
+
+        $verify_sign = base64_encode(Utils::encrypt($raw_sign, $this->secret));
+
+        return $verify_sign == $sign ? ['header' => $raw_header, 'data' => $raw_data] : false;
+    }
 }
