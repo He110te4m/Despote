@@ -150,7 +150,16 @@ class MySQL extends Service
      */
     public function insert($table, $colName, $data = [], $name = '')
     {
-        $table = $this->prefix . $table;
+        if (strpos($table, ',') === false) {
+            $table = '`' . $this->prefix . $table . '`';
+        } else {
+            $temp = explode(',', $table);
+            foreach ($temp as $index => $item) {
+                $temp[$index] = '`' . $this->prefix . trim($item) . '`';
+            }
+            $table = implode(',', $temp);
+        }
+
         $value = "VALUES(?)";
         if (strpos($colName, ',') !== false) {
             $fields = explode(',', $colName);
@@ -178,7 +187,15 @@ class MySQL extends Service
      */
     public function delete($table, $condition, $data = [], $name = '')
     {
-        $table = $this->prefix . $table;
+        if (strpos($table, ',') === false) {
+            $table = '`' . $this->prefix . $table . '`';
+        } else {
+            $temp = explode(',', $table);
+            foreach ($temp as $index => $item) {
+                $temp[$index] = '`' . $this->prefix . trim($item) . '`';
+            }
+            $table = implode(',', $temp);
+        }
 
         $sql = "DELETE FROM $table $condition";
 
@@ -198,7 +215,15 @@ class MySQL extends Service
      */
     public function update($table, $set, $condition, $data = [], $name = '')
     {
-        $table = $this->prefix . $table;
+        if (strpos($table, ',') === false) {
+            $table = '`' . $this->prefix . $table . '`';
+        } else {
+            $temp = explode(',', $table);
+            foreach ($temp as $index => $item) {
+                $temp[$index] = '`' . $this->prefix . trim($item) . '`';
+            }
+            $table = implode(',', $temp);
+        }
 
         $sql = "UPDATE $table SET $set $condition";
 
@@ -218,7 +243,15 @@ class MySQL extends Service
      */
     public function select($colName, $table, $condition = '', $data = [], $name = '')
     {
-        $table = $this->prefix . $table;
+        if (strpos($table, ',') === false) {
+            $table = '`' . $this->prefix . $table . '`';
+        } else {
+            $temp = explode(',', $table);
+            foreach ($temp as $index => $item) {
+                $temp[$index] = '`' . $this->prefix . trim($item) . '`';
+            }
+            $table = implode(',', $temp);
+        }
 
         $sql = "SELECT $colName FROM $table $condition";
 
