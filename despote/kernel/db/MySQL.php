@@ -98,6 +98,8 @@ class MySQL extends Service
     protected $name = 'test';
     // 是否开启持久连接，在多进程服务器（如fastcgi、php-fpm）中，使用数据库持久连接可以提升服务器性能和抗压能力，可选
     protected $pconn = true;
+    // 数据库表前缀
+    protected $prefix = '';
 
     protected function init()
     {
@@ -148,6 +150,7 @@ class MySQL extends Service
      */
     public function insert($table, $colName, $data = [], $name = '')
     {
+        $table = $this->prefix . $table;
         $value = "VALUES(?)";
         if (strpos($colName, ',') !== false) {
             $fields = explode(',', $colName);
@@ -175,6 +178,8 @@ class MySQL extends Service
      */
     public function delete($table, $condition, $data = [], $name = '')
     {
+        $table = $this->prefix . $table;
+
         $sql = "DELETE FROM $table $condition";
 
         // 触发 before 事件
@@ -193,6 +198,8 @@ class MySQL extends Service
      */
     public function update($table, $set, $condition, $data = [], $name = '')
     {
+        $table = $this->prefix . $table;
+
         $sql = "UPDATE $table SET $set $condition";
 
         // 触发 before 事件
@@ -211,6 +218,8 @@ class MySQL extends Service
      */
     public function select($colName, $table, $condition = '', $data = [], $name = '')
     {
+        $table = $this->prefix . $table;
+
         $sql = "SELECT $colName FROM $table $condition";
 
         // 触发 before 事件
@@ -268,6 +277,11 @@ class MySQL extends Service
         $this->name = $name;
         // 如果这个数据库没有连接上，则创建连接
         isset($this->pdo[$name]) || $this->conn($name);
+    }
+
+    public function setPrefix($prefix)
+    {
+        $this->prefix = $prefix;
     }
 
     /////////////
