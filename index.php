@@ -3,12 +3,13 @@
 /////////////
 // 环境校验 //
 ////////////
-error_reporting(E_ALL);
-ini_set("display_errors", "On");
+
 // 设置最低版本需求
-version_compare(PHP_VERSION, '5.4.0', '>=') || exit('Sorry, Despote require php5.4 or higher.<br>很抱歉，Despote 需要 php5.4 或更高的版本。<br><a href="https://www.github.com/he110te4m/despote.git" target="_blank">查看项目地址</a>');
+version_compare(PHP_VERSION, '5.5.0', '>=') || exit('Sorry, Despote require php5.5 or higher.<br>很抱歉，Despote 需要 php5.5 或更高的版本。<br><a href="https://www.github.com/he110te4m/despote" target="_blank">查看项目地址</a>');
 // 初始化环境常量和事件
 require 'despote/init.php';
+// 使用 composer 自动加载
+file_exists(PATH_ROOT . 'vendor' . DS . 'autoload.php') && require PATH_ROOT . 'vendor' . DS . 'autoload.php';
 
 ////////////////
 // 开启自动加载 //

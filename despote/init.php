@@ -42,6 +42,3 @@ define('PATH_LOG', PATH_DESPOTE . 'runtime' . DS . 'log' . DS);
 
 // 定义视图文件访问校验
 define('DESPOTE', true);
-
-// 使用 composer 自动加载
-file_exists(PATH_ROOT . 'vendor' . DS . 'autoload.php') && require PATH_ROOT . 'vendor' . DS . 'autoload.php';
