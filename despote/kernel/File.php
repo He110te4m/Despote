@@ -65,7 +65,7 @@ class File extends Service
             // 需要读取的文件内容
             $content = [];
             // 初始化相关变量
-            $startLine = $line[0];
+            $startLine = $line[0] >= 0 ? $line[0] : 0;
             $endLine   = $line[count($line) - 1];
             $count     = $endLine - $startLine;
 
@@ -76,6 +76,10 @@ class File extends Service
                 $content[] = $fileObj->current();
                 // 下一行
                 $fileObj->next();
+                // 如果到行尾就结束
+                if ($fileObj->eof()) {
+                    break;
+                }
             }
         } else {
             // 判断 line 参数传入 [行数] 这种情况
