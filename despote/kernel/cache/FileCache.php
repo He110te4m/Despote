@@ -25,14 +25,11 @@ class FileCache extends Cache
      */
     public function init()
     {
-        if (!$this->path) {
-            $this->path = PATH_CACHE;
-        } else if (!is_dir($this->path)) {
-            if (\Despote::file()->create($this->path, true)) {
-                throw new \Exception("创建文件缓存目录失败", 500);
-            }
-        }
-
+        // 校验路径是否设置
+        empty($this->path) && $this->path = PATH_CACHE;
+        // 校验路径是否存在
+        is_dir($this->path) || \Despote::file()->create($this->path, true);
+        // 校验自动清理设置
         isset($this->gc) || $this->gc = 50;
     }
 

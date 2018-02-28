@@ -2,7 +2,6 @@
     "name": "he110te4m/despote",
     "description": "a MVC framework of PHP",
     "type": "project",
-    "version": "3.0.1",
     "require": {
         "php": ">=5.5.0",
         "ext-PDO": "*",

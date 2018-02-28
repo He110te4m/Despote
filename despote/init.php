@@ -39,6 +39,8 @@ define('PATH_EXTEND', PATH_DESPOTE . 'extend' . DS);
 define('PATH_CACHE', PATH_DESPOTE . 'runtime' . DS . 'cache' . DS);
 // 缓存目录
 define('PATH_LOG', PATH_DESPOTE . 'runtime' . DS . 'log' . DS);
+// 文件锁目录
+define('PATH_LOCK', PATH_DESPOTE . 'runtime' . DS . 'lock' . DS);
 
 // 定义视图文件访问校验
 define('DESPOTE', true);

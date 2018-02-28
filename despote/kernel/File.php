@@ -24,7 +24,7 @@ class File extends Service
      * @param  integer $mode  文件权限
      * @return Boolean        创建成功返回 true，创建失败返回 false
      */
-    public static function create($file, $isDir = false, $mode = 0775)
+    public function create($file, $isDir = false, $mode = 0775)
     {
         // 如果是目录，就判断目录是否不存在，如果是文件，就判断文件所在的目录是否不存在，只要有一个条件满足，就创建目录
         if (($isDir && !is_dir($file)) || (!$isDir && !is_dir(dirname($file)))) {
@@ -57,7 +57,7 @@ class File extends Service
      * @param  string $mode 文件读取模式，默认为 rb
      * @return Mixed        读取单行返回字符串，读取多行返回字符串数组
      */
-    public static function getLine($file, $line, $mode = 'rb')
+    public function getLine($file, $line, $mode = 'rb')
     {
         // 文件反射对象
         $fileObj = new \SplFileObject($file, $mode);
@@ -169,6 +169,11 @@ class File extends Service
         return $files;
     }
 
+    /**
+     * 获取文件扩展名
+     * @param  String $file 文件路径
+     * @return String       文件扩展名
+     */
     public function getSuffix($file)
     {
         // 如果不是文件，返回 false，如果是，返回扩展名
