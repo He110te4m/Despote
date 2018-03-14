@@ -16,6 +16,7 @@ namespace despote\kernel;
 use \Despote;
 use \despote\base\Service;
 use \Event;
+use \Exception;
 
 class Router extends Service
 {
@@ -99,20 +100,21 @@ class Router extends Service
 
     public function loadCtrl()
     {
+        $http = Despote::request();
+
         // 获取控制器对应的类
-        $class = '\app\\' . $this->getModule() . '\controller\\' . $this->getCtrl();
+        $class = APP . $this->getModule() . '\controller\\' . $this->getCtrl();
 
         // 反射获取 action 的参数并将值存在数组中
         try {
             $obj = new \ReflectionClass($class);
-        } catch (\Exception $e) {
-            $uri = Despote::request()->getUri();
-            throw new \Exception("{$this->getModule()} 模块中的 {$this->getCtrl()} 控制器中的 {$this->getAction()} 方法调用失败。调用的 URI 为：{$uri}", 1);
+        } catch (Exception $e) {
+            throw new Exception("{$this->getModule()} 模块中的 {$this->getCtrl()} 控制器中的 {$this->getAction()} 方法调用失败。调用的 URI 为：{$http->getUri()}", 1);
         }
         $func   = $obj->getMethod($this->getAction());
         $params = [];
         foreach ($func->getParameters() as $param) {
-            $val                  = Despote::request()->get($param->name, false);
+            $val                  = $http->get($param->name, false);
             $params[$param->name] = $val === false ? '' : $val;
         }
         if ($func->isPublic()) {

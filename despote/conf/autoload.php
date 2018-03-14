@@ -11,7 +11,7 @@
  */
 
 return [
-    'Despote' => PATH_DESPOTE . 'Despote.php',
     'Event'   => PATH_KERNEL . 'Event.php',
     'Utils'   => PATH_KERNEL . 'Utils.php',
+    'Despote' => PATH_DESPOTE . 'Despote.php',
 ];

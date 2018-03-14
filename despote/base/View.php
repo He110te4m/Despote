@@ -14,7 +14,6 @@
 namespace despote\base;
 
 use \Despote;
-use \despote\base\Service;
 
 class View extends Service
 {
