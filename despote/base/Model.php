@@ -29,11 +29,11 @@ class Model extends Service
         $router = Despote::router();
 
         // 生成 Model 类名
-        $class = APP . $router->getModule() . '\model\\' . $modelName;
+        $class = APP . $router->getModule() . '\model\\' . ucfirst($modelName);
 
         // 反射获取 Medel 的对象
         try {
-            $obj = new \ReflectionClass($class);
+            $obj = new $class();
         } catch (Exception $e) {
             $uri = Despote::request()->getUri();
             throw new Exception("{$router->getModule()} 模块中的 {$modelName} 模型创建失败。调用的 URI 为：{$uri}", 1);

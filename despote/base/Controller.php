@@ -18,13 +18,6 @@ class Controller extends Service
     protected $view;
     protected $model;
 
-    protected function init()
-    {
-        // 注册 beforeAction 和 afterAction 事件
-
-        $this->model = new Model();
-    }
-
     private function getView()
     {
         // 如果视图不存在就加载视图
@@ -35,6 +28,8 @@ class Controller extends Service
 
     protected function getModel($modelName = 'common')
     {
+        is_null($this->model) && $this->model = new Model();
+
         return $this->model->getModel($modelName);
     }
 

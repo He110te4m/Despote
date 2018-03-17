@@ -214,8 +214,13 @@ class Utils
     public static function initConf()
     {
         // 屏蔽系统错误提示
-        ini_set('display_errors', 'Off');
-        error_reporting(0);
+        if (self::config('debug', false) == false) {
+            ini_set('display_errors', 'Off');
+            error_reporting(0);
+        } else {
+            ini_set('display_errors', '1');
+            error_reporting(E_ALL);
+        }
         Event::trigger('ERROR_CATCH_ON');
     }
 
