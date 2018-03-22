@@ -22,7 +22,7 @@ class Upload extends Service
     ////////////////
 
     // 上传文件保存的路径
-    protected $path = PATH_RES . "uploads/";
+    protected $path;
     // 设置限制上传文件的类型
     protected $allowType = ['jpg', 'gif', 'png', 'jpeg'];
     // 限制文件上传大小（字节），默认为 10M
@@ -49,7 +49,7 @@ class Upload extends Service
 
     protected function init()
     {
-        empty($this->path) && $this->error('存储路径未设置');
+        empty($this->path) && $this->path = PATH_RES . 'uploads' . DS;
         if (!is_dir($this->path) && !\Despote::file()->create($this->path, true)) {
             $this->error('创建目录失败，请手动创建目录');
         }
