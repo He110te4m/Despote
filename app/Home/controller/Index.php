@@ -17,8 +17,5 @@ class Index extends Controller
 {
     public function index()
     {
-        echo 'Core running use: ' . gt() . ' s';
-        echo "<br>";
-        echo 'Core running use: ' . gm() . ' MB';
     }
 }

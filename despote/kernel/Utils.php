@@ -25,9 +25,14 @@ class Utils
     /**
      * 计算资源占用，并保存在数组中
      * @param  String $title 统计分类，默认为 Core，即核心框架加载
+     * @param  String $event 统计完成后需要触发的事件名
+     * @param  Array  $args  传递给事件的参数
+     * @return Mixed         默认返回 true，如果有触发事件则返回事件执行后的返回值
      */
-    public static function tick($title = 'Core')
+    public static function tick($title = 'Core', $event = '', $args = [])
     {
+        // 返回值
+        $result = true;
         // 容错处理
         empty($title) && $title = 'Core';
         // 键名不区分大小写
@@ -44,6 +49,23 @@ class Utils
 
         // 统计内存使用
         self::$memories[$title][] = function_exists('memory_get_usage') ? memory_get_usage() : 0;
+
+        // 如果设置了事件触发，则开始触发事件
+        if (!empty($event)) {
+            if (isset($args)) {
+                // 转成数组方便传参
+                is_array($args) || $args = [$args];
+                // 整合参数触发事件
+                $args = array_merge([$event], $args);
+            } else {
+                $args = [$event];
+            }
+
+            // 获取事件处理结果
+            $result = call_user_func_array('Event::trigger', $args);
+        }
+
+        return $result;
     }
 
     /**
