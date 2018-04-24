@@ -109,14 +109,21 @@ class Router extends Service
         try {
             $obj = new \ReflectionClass($class);
         } catch (Exception $e) {
-            throw new Exception("{$this->getModule()} 模块中的 {$this->getCtrl()} 控制器中的 {$this->getAction()} 方法调用失败。调用的 URI 为：{$http->getUri()}", 1);
+            if (Utils::config('debug', false)) {
+                throw new Exception("{$this->getModule()} 模块中的 {$this->getCtrl()} 控制器中的 {$this->getAction()} 方法调用失败。调用的 URI 为：{$http->getUri()}", 1);
+            }
+
         }
-        $func   = $obj->getMethod($this->getAction());
+        $func = $obj->getMethod($this->getAction());
+
+        // 装载 Action 参数，兼容 Action 传参
         $params = [];
         foreach ($func->getParameters() as $param) {
             $val                  = $http->get($param->name, false);
             $params[$param->name] = $val === false ? '' : $val;
         }
+
+        // 判断是否为公有可调用的 Action
         if ($func->isPublic()) {
             Event::trigger('BEFORE_ACTION');
             // 实例化控制器并调用 action

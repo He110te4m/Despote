@@ -29,3 +29,16 @@ function gm($title = 'Core')
 {
     return \Utils::getUseMemory($title);
 }
+
+/**
+ * 获取系统配置信息
+ * @param  String $name         配置名
+ * @param  Mixed  $defaultValue 配置不存在时返回的值，不配置默认返回空字符串
+ * @return Mixed                配置存在时返回配置值，否则返回 defaultValue 的值
+ */
+function c($name, $defaultValue = '')
+{
+    empty(self::$config) && self::$config = require PATH_CONF . 'config.php';
+
+    return isset(self::$config[$name]) ? self::$config[$name] : $defaultValue;
+}

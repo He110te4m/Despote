@@ -14,6 +14,7 @@ namespace despote\kernel;
 
 use \Despote;
 use \despote\base\Service;
+use \Event;
 use \Utils;
 
 class ErrCatch extends Service
@@ -79,6 +80,9 @@ EOF;
         if ($error) {
             $this->display('error', $error['message'], $error['file'], $error['line']);
         }
+
+        // 脚本运行中止，触发事件写入日志
+        Event::trigger('LOGGER');
     }
 
     /**

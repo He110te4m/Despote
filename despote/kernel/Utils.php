@@ -252,6 +252,9 @@ class Utils
 
     private static $config;
 
+    /**
+     * 初始化环境配置
+     */
     public static function initConf()
     {
         // 屏蔽系统错误提示
@@ -265,6 +268,12 @@ class Utils
         Event::trigger('ERROR_CATCH_ON');
     }
 
+    /**
+     * 获取系统配置信息
+     * @param  String $name         配置名
+     * @param  Mixed  $defaultValue 配置不存在时返回的值，不配置默认返回空字符串
+     * @return Mixed                配置存在时返回配置值，否则返回 defaultValue 的值
+     */
     public static function config($name, $defaultValue = '')
     {
         empty(self::$config) && self::$config = require PATH_CONF . 'config.php';

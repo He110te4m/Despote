@@ -26,7 +26,7 @@ return [
     //     'action'     => 'index',
     // ],
     // MySQL
-    'sql'  => [
+    'sql'    => [
         'class' => '\despote\kernel\db\MySQL',
 
         // // 数据库地址，默认为 localhost
@@ -70,14 +70,14 @@ return [
         // // 模拟预处理，默认为 false
         // 'pretreat' => false,
     ],
-    // // 日志记录
-    // 'logger'    => [
-    //     'class' => '\despote\kernel\Logger',
-    //     // 日志存放位置
-    //     'path'  => PATH_LOG,
-    //     // 日志等级
-    //     'limit' => 5,
-    // ],
+    // 日志记录
+    'logger' => [
+        'class' => '\despote\kernel\Logger',
+        // 日志存放位置
+        'path'  => PATH_LOG,
+        // 日志等级
+        'limit' => 5,
+    ],
     // // cookie 操作类
     // 'cookie'    => [
     //     'class' => 'despote\kernel\Cookie',
@@ -141,7 +141,7 @@ return [
     //     // 加密的密钥
     //     'secret' => 'Despote',
     // ],
-    'mail' => [
+    'mail'   => [
         'class' => '\despote\extend\Mailer',
         // // 使用的安全协议
         // 'SMTPSecure' => 'ssl',

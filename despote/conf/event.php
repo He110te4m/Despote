@@ -35,4 +35,8 @@ return [
         'name'     => 'DEBUG_END',
         'callback' => 'Utils::end',
     ],
+    [
+        'name'     => 'LOGGER',
+        'callback' => '\despote\kernel\logger::save',
+    ],
 ];

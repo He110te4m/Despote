@@ -23,7 +23,7 @@ class Logger extends Service
     // 日志存储路径
     protected $path;
     // 记录日志的级别，默认全显示
-    protected $limit = 5;
+    protected $limit;
     // 日志等级划分
     private $level = [
         // 操作日志，比如访问某页面等
@@ -57,7 +57,7 @@ class Logger extends Service
         'fatal' => '#F00',
     ];
     // 日志文件头
-    private $head = <<<EOF
+    private static $head = <<<EOF
 <meta charset="utf8">
 <style>
     .log {
@@ -86,6 +86,7 @@ class Logger extends Service
         <li>Despote Framework [Version 3.0]. Copyright (c) 2017 He110. All rights reserved.</li>
         <li>Copyright (c) 2017 He110. All rights reserved.</li>
 EOF;
+    private static $logs = [];
 
     protected function init()
     {
@@ -94,8 +95,15 @@ EOF;
         is_dir($this->path) || \Despote::file()->create($this->path, true);
     }
 
-    public function log($level, $msg)
+    /**
+     * 记录日志
+     * @param  Mixed  $level  兼容等级 or 字符串，可选值见 $this->level
+     * @param  String $msg    需要记录的信息
+     * @param  String $type   记录的操作类型，用于区分不同的日志
+     */
+    public function log($level, $msg, $type = '')
     {
+        // 校验日志级别是否需要记录
         $level = strtolower($level);
         if ($this->level[$level] > $this->limit) {
             return;
@@ -104,19 +112,41 @@ EOF;
         // 记录日志的时间
         $time = date('Y-m-d H-i-s');
         // 日志存放地址
-        $file = $this->path . date('Y-m-d') . '.html';
+        empty($type) || $type .= ' ';
+        $file = $this->path . $type . date('Y-m-d') . '.html';
         // 日志颜色高亮
         $color = $this->color[$level];
         $level = strtoupper($level);
-        // 日志模板
-        $tpl = <<<EOF
-        <li>[root@He110 ~] log -d $time</li>
-        <li><span style="color: {$color}">[ $level ]</span> $msg</li>
-        <li></li>
-EOF;
 
-        // 写入日志
-        is_file($file) || file_put_contents($file, $this->head, LOCK_EX);
-        file_put_contents($file, $tpl, FILE_APPEND | LOCK_EX);
+        // 初始化日志
+        isset(self::$logs[$file]) || self::$logs[$file] = [];
+        // 写入日志，等待脚本执行完成后再写入，避免频繁写入文件
+        self::$logs[$file][] = [
+            'msg'   => $msg,
+            'time'  => $time,
+            'color' => $color,
+            'level' => $level,
+        ];
+    }
+
+    public static function save()
+    {
+        // 处理不同类别的日志
+        foreach (self::$logs as $file => $item) {
+            // 清除上次的日志记录
+            $content = '';
+            foreach ($item as $log) {
+                // 日志模板
+                $content .= <<<EOF
+                <li>[root@He110 ~] log -d {$log['time']}</li>
+                <li><span style="color: {$log['color']}">[ {$log['level']} ]</span> {$log['msg']}</li>
+                <li></li>
+EOF;
+            }
+
+            // 写入日志
+            is_file($file) || file_put_contents($file, self::$head, LOCK_EX);
+            file_put_contents($file, $content, FILE_APPEND | LOCK_EX);
+        }
     }
 }
