@@ -17,6 +17,8 @@ class Index extends Controller
 {
     public function index()
     {
-        $this->render('index.php');
+        echo 'Core running use: ' . gt() . ' s';
+        echo "<br>";
+        echo 'Core running use: ' . gm() . ' MB';
     }
 }

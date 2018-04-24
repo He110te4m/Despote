@@ -10,6 +10,8 @@ version_compare(PHP_VERSION, '5.5.0', '>=') || exit('Sorry, Despote require php5
 require 'despote/init.php';
 // 使用 composer 自动加载
 file_exists(PATH_ROOT . 'vendor' . DS . 'autoload.php') && require PATH_ROOT . 'vendor' . DS . 'autoload.php';
+// 载入内置短函数，方便调用
+file_exists(PATH_DESPOTE . 'func.php') && require PATH_DESPOTE . 'func.php';
 
 ////////////////
 // 开启自动加载 //

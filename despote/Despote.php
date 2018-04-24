@@ -18,7 +18,7 @@ class Despote
         self::initEvent();
 
         // 统计现在的资源占用信息，方便在过程中获取
-        Event::trigger('TICK', '框架核心');
+        Event::trigger('TICK', 'Core');
         // 开始核心方法
         self::initCore();
         // 加载配置文件配置
@@ -26,7 +26,7 @@ class Despote
         // 开始路由分发
         self::router()->loadCtrl();
         // 统计最终运行时间
-        Event::trigger('TICK', '框架核心');
+        Event::trigger('TICK', 'Core');
     }
 
     /**
