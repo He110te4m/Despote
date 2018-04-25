@@ -6,7 +6,7 @@
  *   | |_| |  __/\__ \ |_) | (_) | ||  __/
  *   |____/ \___||___/ .__/ \___/ \__\___|
  *                   |_|
- * @author      He110 (i@he110.top)
+ * @author      He110 (i@he110.info)
  * @namespace   app\Home\controller
  */
 namespace app\Home\controller;

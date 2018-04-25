@@ -6,8 +6,8 @@
  *   | |_| |  __/\__ \ |_) | (_) | ||  __/
  *   |____/ \___||___/ .__/ \___/ \__\___|
  *                   |_|
- * SQL 数据库操作类
- * @author      He110 (i@he110.top)
+ * MySQL 数据库操作类，支持事件触发，支持事务功能
+ * @author      He110 (i@he110.info)
  * @namespace   despote\kernel\db;
  */
 namespace despote\kernel\db;

@@ -7,7 +7,7 @@
  *   |____/ \___||___/ .__/ \___/ \__\___|
  *                   |_|
  * Token 工具类
- * @author      He110 (i@he110.top)
+ * @author      He110 (i@he110.info)
  * @namespace   despote\kernel
  */
 

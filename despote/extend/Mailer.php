@@ -6,10 +6,9 @@
  *   | |_| |  __/\__ \ |_) | (_) | ||  __/
  *   |____/ \___||___/ .__/ \___/ \__\___|
  *                   |_|
- * 简易封装的邮件发送类，基于 PHPMailer
- * @author      He110 (i@he110.top)
- * @namespace
- * @example
+ * 简易封装的邮件发送类，基于 PHPMailer，需要安装 PHPMainler
+ * @author      He110 (i@he110.info)
+ * @namespace   despote\extend
  */
 
 namespace despote\extend;

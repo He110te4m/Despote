@@ -6,8 +6,8 @@
  *   | |_| |  __/\__ \ |_) | (_) | ||  __/
  *   |____/ \___||___/ .__/ \___/ \__\___|
  *                   |_|
- * 反向代理类
- * @author      He110 (i@he110.top)
+ * 反向代理类，便于服务器端渲染如 Vue、React 等使用虚拟 DOM 技术的页面
+ * @author      He110 (i@he110.info)
  * @namespace   despote\kernel
  */
 

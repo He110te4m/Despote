@@ -6,8 +6,8 @@
  *   | |_| |  __/\__ \ |_) | (_) | ||  __/
  *   |____/ \___||___/ .__/ \___/ \__\___|
  *                   |_|
- * 事件触发类
- * @author      He110 (i@he110.top)
+ * 事件触发类，俗称钩子、Hook
+ * @author      He110 (i@he110.info)
  * @namespace   despote\kernel
  */
 

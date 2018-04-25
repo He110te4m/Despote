@@ -7,7 +7,7 @@
  *   |____/ \___||___/ .__/ \___/ \__\___|
  *                   |_|
  * 工具类，放置一些常用函数
- * @author      He110 (i@he110.top)
+ * @author      He110 (i@he110.info)
  * @namespace   despote\kernel
  */
 

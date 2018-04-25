@@ -7,6 +7,7 @@
  *   |____/ \___||___/ .__/ \___/ \__\___|
  *                   |_|
  * 请求处理类
+ * @author      He110 (i@he110.info)
  * @namespace   despote\kernel
  */
 

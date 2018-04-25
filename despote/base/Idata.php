@@ -7,7 +7,7 @@
  *   |____/ \___||___/ .__/ \___/ \__\___|
  *                   |_|
  * 所有数据操作相关的类需要遵循的接口规范
- * @author      He110 (i@he110.top)
+ * @author      He110 (i@he110.info)
  * @namespace   despote\base
  */
 

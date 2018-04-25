@@ -6,8 +6,8 @@
  *   | |_| |  __/\__ \ |_) | (_) | ||  __/
  *   |____/ \___||___/ .__/ \___/ \__\___|
  *                   |_|
- * 缓存类
- * @author      He110 (i@he110.top)
+ * Memcached 缓存类，基于 Memcached 缓存，支持分布式缓存，Windows 下无法使用（Windows 下的 PHP 不能使用 Memcached 扩展）
+ * @author      He110 (i@he110.info)
  * @namespace   despote\kernel\cache
  */
 

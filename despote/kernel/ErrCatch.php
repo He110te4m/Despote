@@ -6,8 +6,8 @@
  *   | |_| |  __/\__ \ |_) | (_) | ||  __/
  *   |____/ \___||___/ .__/ \___/ \__\___|
  *                   |_|
- * 错误处理类，对错误/异常捕获并处理
- * @author      He110 (i@he110.top)
+ * 错误处理类，对错误/异常捕获并处理，在非 Debug 状态下会自动记录到日志
+ * @author      He110 (i@he110.info)
  * @namespace   despote\kernel
  */
 namespace despote\kernel;

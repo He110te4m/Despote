@@ -6,8 +6,8 @@
  *   | |_| |  __/\__ \ |_) | (_) | ||  __/
  *   |____/ \___||___/ .__/ \___/ \__\___|
  *                   |_|
- * 自动加载类
- * @author      He110 (i@he110.top)
+ * 自动加载类，遵循 PSR4 自动加载，不满足 PSR4 自动加载规范的请在 \despote\conf\autoload.php 文件中配置
+ * @author      He110 (i@he110.info)
  * @namespace   despote\kernel
  */
 
