@@ -1,4 +1,5 @@
  ☐ curl 操作类
+ ☐ XML 操作类根据属性或 XPath 获取结点
  ☐ 图片操作类
  ☐ 写文档
  ☐ 封装 MongoDB
