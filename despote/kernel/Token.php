@@ -94,6 +94,11 @@ class Token extends Service
         return $verify_sign == $sign ? $raw_data : false;
     }
 
+    /**
+     * 获取完整 Token 数据
+     * @param  String $token 用 create() 方法生成的 Token 字符串
+     * @return Array         包含 header 和 data 两个索引的关联数组
+     */
     public function get($token)
     {
         if (empty($token)) {

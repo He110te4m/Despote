@@ -15,7 +15,7 @@ class Utils
 {
     /////////////
     // 资源统计 //
-    ////////////
+    /////////////
 
     // 统计的时间
     private static $times = [];
@@ -137,7 +137,7 @@ class Utils
 
     /////////////
     // 加密解密 //
-    ////////////
+    /////////////
 
     /**
      * 使用 key 加密字符串
@@ -248,7 +248,7 @@ class Utils
 
     /////////////
     // 配置加载 //
-    ////////////
+    /////////////
 
     private static $config;
 
@@ -279,5 +279,15 @@ class Utils
         empty(self::$config) && self::$config = require PATH_CONF . 'config.php';
 
         return isset(self::$config[$name]) ? self::$config[$name] : $defaultValue;
+    }
+
+    /**
+     * 判断数组是否为关联数组
+     * @param  Array   $arr 需要判断的数组
+     * @return Boolean      关联数组返回 true，索引数组返回 false
+     */
+    public static function isAssoc(array $arr)
+    {
+        return array_keys($arr) !== range(0, count($arr) - 1);
     }
 }

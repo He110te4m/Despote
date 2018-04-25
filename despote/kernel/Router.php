@@ -34,6 +34,9 @@ class Router extends Service
     // 现在的路由信息
     protected $router = [];
 
+    /**
+     * 初始化函数，开始校验与解析 URL
+     */
     protected function init()
     {
         $host = Despote::request()->getHost();
@@ -46,6 +49,9 @@ class Router extends Service
         $this->parse();
     }
 
+    /**
+     * 解析 URL
+     */
     public function parse()
     {
         // 解析原生 URL 请求地址，这样能区分出用户自己带上的 GET 参数

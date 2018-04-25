@@ -20,7 +20,7 @@ class Tpl extends Service
 {
     /////////////
     // 模板配置 //
-    ////////////
+    /////////////
 
     // 模板所在模块名
     public $module;
@@ -72,11 +72,6 @@ class Tpl extends Service
 
         require $cache;
     }
-
-    // public function assign($key, $value)
-    // {
-    //     $this->vars[$key] = $value;
-    // }
 
     /**
      * 获取模板绝对路径

@@ -21,7 +21,7 @@ class Proxy extends Service
 {
     /////////////
     // 杂七杂八 //
-    ////////////
+    /////////////
 
     // 请求处理对象
     private $http;
@@ -30,7 +30,7 @@ class Proxy extends Service
 
     //////////////////
     // 代理服务器设置 //
-    /////////////////
+    //////////////////
 
     // 需要代理的主机号
     protected $host;
@@ -69,7 +69,7 @@ class Proxy extends Service
 
     //////////////////
     // 服务器返回参数 //
-    /////////////////
+    //////////////////
 
     // 本地是否存在有效缓存
     private $isCache = false;
