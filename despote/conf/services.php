@@ -166,5 +166,6 @@ return [
         // // 回复姓名
         // 'ReplyName'  => 'He110',
     ],
-    'xml'    => '\despote\kernel\XML',
+    // 'xml'    => '\despote\kernel\XML',
+    'curl'   => '\despote\kernel\Curl',
 ];
