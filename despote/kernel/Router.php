@@ -42,11 +42,11 @@ class Router extends Service
         $host = Despote::request()->getHost();
         if (!empty($this->host) && !isset($this->host[$host])) {
             // 域名绑定校验
-            throw new \Exception("Access Forbidden", 403);
-            return;
+            throw new Exception("Access Forbidden", 403);
+        } else {   
+            // 校验通过，开始解析 URL
+            $this->parse();
         }
-        // 校验通过，开始解析 URL
-        $this->parse();
     }
 
     /**
@@ -62,6 +62,12 @@ class Router extends Service
         $path = trim(preg_replace('/^(\/)?index\.php/i', '', $path, 1), '/');
         // 获取 GET 参数
         parse_str(isset($urlInfo['query']) ? $urlInfo['query'] : '', $_GET);
+
+        // 过滤后缀，伪静态设置
+        $suffix = Despote::file()->getSuffix($path);
+        if (!empty($suffix)) {
+            $path = rtrim(preg_replace('/.' . $suffix . '$/i', '', $path, 1), '/');
+        }
 
         // 路由匹配
         $pathInfo = empty($path) ? [] : explode('/', $path);

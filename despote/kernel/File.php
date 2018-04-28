@@ -171,12 +171,12 @@ class File extends Service
 
     /**
      * 获取文件扩展名
-     * @param  String $file 文件路径
+     * @param  String $file 文件路径或网址
      * @return String       文件扩展名
      */
     public function getSuffix($file)
     {
         // 如果不是文件，返回 false，如果是，返回扩展名
-        return is_file($file) ? pathinfo($file, PATHINFO_EXTENSION) : false;
+        return (is_file($file) || filter_var($file, FILTER_SANITIZE_URL)) ? pathinfo($file, PATHINFO_EXTENSION) : false;
     }
 }
