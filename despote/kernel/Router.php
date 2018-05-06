@@ -17,6 +17,7 @@ use \Despote;
 use \despote\base\Service;
 use \Event;
 use \Exception;
+use \Utils;
 
 class Router extends Service
 {
@@ -43,7 +44,7 @@ class Router extends Service
         if (!empty($this->host) && !isset($this->host[$host])) {
             // 域名绑定校验
             throw new Exception("Access Forbidden", 403);
-        } else {   
+        } else {
             // 校验通过，开始解析 URL
             $this->parse();
         }
