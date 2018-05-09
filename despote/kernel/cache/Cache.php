@@ -48,7 +48,7 @@ abstract class Cache extends Service implements Idata
      * 批量设置数据，如果键名已经存在，则直接覆盖
      * @param  Array   $keys   键名数组
      * @param  Mixed   $values 键值数组
-     * @param  integer $expiry 过期时间
+     * @param  Integer $expiry 过期时间
      */
     public function mset($keys, $values, $expiry = 259200)
     {

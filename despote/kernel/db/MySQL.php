@@ -111,7 +111,7 @@ class MySQL extends Service
     /**
      * 执行 SQL 语句
      * @param  String $sql  SQL 语句，可包含带预处理符号，如：delete from `user` where `Id` = ?
-     * @param  array  $data 如果传入的 SQL 语句带有预处理，则必须传入该参数，用于赋值给预处理变量
+     * @param  Array  $data 如果传入的 SQL 语句带有预处理，则必须传入该参数，用于赋值给预处理变量
      * @return Mixed        如果执行成功，返回记录集对象；处理失败返回 false
      */
     public function execSQL($sql, $event = 'select', $data = [], $name = '')
@@ -143,7 +143,7 @@ class MySQL extends Service
      * 插入数据
      * @param  String   $table      待插入的表名
      * @param  String   $colName    插入的字段名，多个字段使用 , 隔开
-     * @param  array    $data       要插入的值，与字段一一对应
+     * @param  Array    $data       要插入的值，与字段一一对应
      * @return Object               执行 SQL 后返回的记录集
      */
     public function insert($table, $colName, $data = [], $name = '')
@@ -226,6 +226,11 @@ class MySQL extends Service
         return $res;
     }
 
+    /**
+     * 获取指定数据库名的 PDO 对象
+     * @param  String  $name  数据库名
+     * @return Object         该数据库名对应的 PDO 对象，若为空返回当前操作数据库名对应的 PDO 对象
+     */
     public function getIns($name = '')
     {
         if (empty($name)) {
@@ -238,13 +243,21 @@ class MySQL extends Service
         }
     }
 
+    /**
+     * 获取指定数据库中最后一次插入时的 ID
+     * @param  String  $name  需要指定的数据库名
+     * @return Integer        最后一次插入的 ID
+     */
     public function getLastID($name = '')
     {
-        if (empty($name)) {
-            return $this->getIns($name)->lastInsertId();
-        }
+        return $this->getIns($name)->lastInsertId();
     }
 
+    /**
+     * 连接数据库
+     * @param  String  $name  需要连接的数据库名
+     * @return Void
+     */
     public function conn($name)
     {
         // 引用变量节省代码量
@@ -263,6 +276,11 @@ class MySQL extends Service
         $pdo[$name]->setAttribute(PDO::ATTR_EMULATE_PREPARES, $this->pretreat);
     }
 
+    /**
+     * 修改当前操作的数据库
+     * @param  String  $name  新的数据库名，如果使用时未连接会尝试连接
+     * @return Void
+     */
     public function setDB($name)
     {
         $this->name = $name;
@@ -276,7 +294,7 @@ class MySQL extends Service
 
     /**
      * 开始事务
-     * @param  string $name 开启事务的数据库名
+     * @param  String $name 开启事务的数据库名
      */
     public function begin($name = '')
     {
@@ -285,7 +303,7 @@ class MySQL extends Service
 
     /**
      * 提交事务
-     * @param  string $name 提交事务的数据库名
+     * @param  String $name 提交事务的数据库名
      */
     public function commit($name = '')
     {
@@ -294,7 +312,7 @@ class MySQL extends Service
 
     /**
      * 回滚事务
-     * @param  string $name 回滚事务的数据库名
+     * @param  String $name 回滚事务的数据库名
      */
     public function back($name = '')
     {
@@ -328,7 +346,7 @@ class MySQL extends Service
 
     /**
      * 批量注册事件，使用数组对多个事件进行初始化
-     * @param  array  $events 关联数组，格式为：['事件名' => 匿名函数]，注意，不能传入回调函数，只能直接传入函数
+     * @param  Array  $events 关联数组，格式为：['事件名' => 匿名函数]，注意，不能传入回调函数，只能直接传入函数
      */
     public function hookArray($events = [])
     {
@@ -344,7 +362,7 @@ class MySQL extends Service
     /**
      * 获取单条数据
      * @param  Object  $res    PDOStatement 对象
-     * @param  integer $expiry 缓存有效期，默认为一天，即 86400 秒
+     * @param  Integer $expiry 缓存有效期，默认为一天，即 86400 秒
      * @return Object          获取的行数据
      */
     public function fetch($res, $expiry = 86400)
@@ -362,7 +380,7 @@ class MySQL extends Service
     /**
      * 获取多条数据
      * @param  Object  $res    PDOStatement 对象
-     * @param  integer $expiry 缓存有效期，默认为一天，即 86400 秒
+     * @param  Integer $expiry 缓存有效期，默认为一天，即 86400 秒
      * @return Array           获取的所有行数据
      */
     public function fetchAll($res, $expiry = 86400)

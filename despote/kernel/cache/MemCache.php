@@ -54,30 +54,52 @@ class MemCache extends Cache
         return $this->ins;
     }
 
+    /**
+     * 添加数据，当键名已存在时不添加
+     * @param String   $key    键名
+     * @param Mixed    $value  键值
+     * @param Integer  $value  缓存有效时间，单位为 s(秒)，默认为 3 天
+     */
     public function add($key, $value, $expiry = 0)
     {
         $this->has($key) || $this->set($key, $value);
     }
 
-    // 设置数据接口规范
+    /**
+     * 设置缓存数据
+     * @param String   $key    键名
+     * @param Mixed    $value  键值
+     * @param Integer  $value  缓存有效时间，单位为 s(秒)，默认为 3 天
+     */
     public function set($key, $value, $expiry = 0)
     {
         return $this->getIns()->set($key, $value, $expiry > 0 ? time() + $expiry : 0);
     }
 
-    // 删除数据接口规范
+    /**
+     * 删除缓存数据
+     * @param  String $key 要删除的键名
+     */
     public function del($key)
     {
         return $this->getIns()->delete($key);
     }
 
-    // 获取数据接口规范
+    /**
+     * 获取数据
+     * @param  String $key  键名
+     * @return Mixed        键名对应的键值
+     */
     public function get($key)
     {
         return $this->getIns()->get($key);
     }
 
-    // 查询数据是否存在接口规范
+    /**
+     * 查询数据是否存在
+     * @param  String   $key  需要判断是否存在缓存的键名
+     * @return Boolean        是否存在此缓存
+     */
     public function has($key)
     {
         // 直接获取值
@@ -86,6 +108,9 @@ class MemCache extends Cache
         return $this->getIns()->getResultCode() === Memcached::RES_SUCCESS;
     }
 
+    /**
+     * 清空所有缓存
+     */
     public function flush()
     {
         return $this->getIns()->flush();

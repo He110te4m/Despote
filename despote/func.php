@@ -38,7 +38,7 @@ function gm($title = 'Core')
  */
 function c($name, $defaultValue = '')
 {
-    empty(self::$config) && self::$config = require PATH_CONF . 'config.php';
+    empty(Utils::$config) && Utils::$config = require PATH_CONF . 'config.php';
 
-    return isset(self::$config[$name]) ? self::$config[$name] : $defaultValue;
+    return isset(Utils::$config[$name]) ? Utils::$config[$name] : $defaultValue;
 }

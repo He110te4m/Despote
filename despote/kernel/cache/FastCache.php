@@ -19,7 +19,7 @@ class FastCache extends Cache
     private static $cache = [];
 
     /**
-     * 添加数据，当键名以存在时不添加
+     * 添加数据，当键名已存在时不添加
      * @param String  $key    键名
      * @param String  $value  键值
      */
@@ -50,19 +50,20 @@ class FastCache extends Cache
     }
 
     /**
-     * 获取数据接口规范
-     * @param  String $key 键名
-     * @return Mixed       键名对应的键值
+     * 获取数据
+     * @param  String $key      键名
+     * @param  String $default 键值不存在时返回的值，默认为空字符串
+     * @return Mixed            键名对应的键值
      */
-    public function get($key)
+    public function get($key, $default = '')
     {
-        return isset(self::$cache[$key]) ? self::$cache[$key] : '';
+        return isset(self::$cache[$key]) ? self::$cache[$key] : $default;
     }
 
     /**
      * 查询是否存在缓存
      * @param  String  $key 键名
-     * @return boolean      缓存是否存在
+     * @return Boolean      缓存是否存在
      */
     public function has($key)
     {

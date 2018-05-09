@@ -44,12 +44,13 @@ class Session extends Service
 
     /**
      * 获取 session 的值
-     * @param  String $key session 的键名
-     * @return Mixed       session 的键值
+     * @param  String $key      session 的键名
+     * @param  String  $default 获取不到 session 时的值
+     * @return Mixed            session 的键值
      */
-    public function get($key)
+    public function get($key, $default = null)
     {
-        return isset($_SESSION[$key]) ? $_SESSION[$key] : null;
+        return isset($_SESSION[$key]) ? $_SESSION[$key] : $default;
     }
 
     /**
@@ -64,7 +65,7 @@ class Session extends Service
     /**
      * 判断 session 是否存在
      * @param  String  $key session 的键名
-     * @return boolean      session 是否存在
+     * @return Boolean      session 是否存在
      */
     public function has($key)
     {

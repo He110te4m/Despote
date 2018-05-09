@@ -13,6 +13,7 @@
 namespace despote\kernel;
 
 use \despote\base\Service;
+use \Despote;
 
 class Logger extends Service
 {
@@ -46,15 +47,15 @@ class Logger extends Service
     // 设置日志颜色
     private $color = [
         // 操作日志为绿色
-        'info'  => '#0F0',
+        'info'  => '#0f0',
         // Debug 信息为默认颜色
-        'debug' => '#FFF',
+        'debug' => '#fff',
         // 警告为黄色
-        'warn'  => '#FF0',
+        'warn'  => '#ff0',
         // 系统错误为红色
-        'error' => '#F00',
+        'error' => '#f00',
         // 系统致命错误为红色
-        'fatal' => '#F00',
+        'fatal' => '#f00',
     ];
     // 日志文件头
     private static $head = <<<EOF
@@ -63,21 +64,21 @@ class Logger extends Service
     .log {
         font-family: 'Consolas';
         width: 100%;
-        border: 1px solid #000000;
+        border: 1px solid #000;
     }
     .log h1 {
         margin: 0;
         padding: 5px 10px;
         font-size: 18px;
-        border-bottom: 1px solid #000000;
+        border-bottom: 1px solid #000;
     }
     .log ul {
         list-style: none;
         padding: 5px 10px;
         margin: 0;
         font-size: 16px;
-        background-color: #000000;
-        color: #FFFFFF;
+        background-color: #000;
+        color: #fff;
     }
 </style>
 <div class="log">
@@ -92,7 +93,7 @@ EOF;
     {
         isset($this->path) || $this->path   = PATH_LOG;
         isset($this->limit) || $this->limit = 2;
-        is_dir($this->path) || \Despote::file()->create($this->path, true);
+        is_dir($this->path) || Despote::file()->create($this->path, true);
     }
 
     /**
@@ -129,6 +130,9 @@ EOF;
         ];
     }
 
+    /**
+     * 保存日志，防止死循环访问出错页面，内存爆炸，等到程序结束了再保存，先存在内存中
+     */
     public static function save()
     {
         // 处理不同类别的日志

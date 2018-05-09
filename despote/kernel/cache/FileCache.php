@@ -13,9 +13,11 @@
 
 namespace despote\kernel\cache;
 
+use \Despote;
+
 class FileCache extends Cache
 {
-    // GC 设置
+    // GC 设置，取值范围为 [0, 100]，GC 越小，清理越频繁，默认为 50
     protected $gc;
     // 文件缓存目录
     protected $path;
@@ -28,7 +30,7 @@ class FileCache extends Cache
         // 校验路径是否设置
         empty($this->path) && $this->path = PATH_CACHE;
         // 校验路径是否存在
-        is_dir($this->path) || \Despote::file()->create($this->path, true);
+        is_dir($this->path) || Despote::file()->create($this->path, true);
         // 校验自动清理设置
         isset($this->gc) || $this->gc = 50;
     }
@@ -45,7 +47,7 @@ class FileCache extends Cache
 
     /**
      * 自动随机清理
-     * @param  boolean $flush 是否清除所有缓存，传入 false 时将随机调用缓存清理
+     * @param  Boolean $flush 是否清除所有缓存，传入 false 时将仅清理失效缓存，传入 true 则清空所有缓存
      */
     private function gc($flush = false)
     {
@@ -62,12 +64,23 @@ class FileCache extends Cache
         }
     }
 
+    /**
+     * 添加数据，当键名已存在时不添加
+     * @param String   $key    键名
+     * @param Mixed    $value  键值
+     * @param Integer  $value  缓存有效时间，单位为 s(秒)，默认为 3 天
+     */
     public function add($key, $value, $expiry = 259200)
     {
         $this->has($key) || $this->set($key, $value);
     }
 
-    // 设置数据接口规范
+    /**
+     * 设置缓存数据
+     * @param String   $key    键名
+     * @param Mixed    $value  键值
+     * @param Integer  $value  缓存有效时间，单位为 s(秒)，默认为 3 天
+     */
     public function set($key, $value, $expiry = 259200)
     {
         // 启动随机清理缓存机制
@@ -81,30 +94,44 @@ class FileCache extends Cache
         }
     }
 
-    // 删除数据接口规范
+    /**
+     * 删除缓存数据
+     * @param  String $key 要删除的键名
+     */
     public function del($key)
     {
         $this->has($key) && @unlink($this->getCacheName($key));
     }
 
-    // 获取数据接口规范
-    public function get($key)
+    /**
+     * 获取数据
+     * @param  String $key      键名
+     * @param  String $default 键值不存在时返回的值，默认为空字符串
+     * @return Mixed            键名对应的键值
+     */
+    public function get($key, $default = false)
     {
+        // 获取默认值和缓存文件名
+        $value     = $default;
         $cacheName = $this->getCacheName($key);
 
-        // 使用文件独占锁读取文件并反序列化
+        // 使用文件独占锁尝试读取文件并反序列化
         if ($this->has($key) && $fp = @fopen($cacheName, 'r')) {
             @flock($fp, LOCK_SH);
+            // 获取键值
             $value = unserialize(stream_get_contents($fp));
             @flock($fp, LOCK_UN);
             @fclose($fp);
-
-            return $value;
         }
-        return false;
+
+        return $value;
     }
 
-    // 查询数据是否存在接口规范
+    /**
+     * 查询数据是否存在
+     * @param  String   $key  需要判断是否存在缓存的键名
+     * @return Boolean        是否存在此缓存
+     */
     public function has($key)
     {
         if (is_file($this->getCacheName($key))) {

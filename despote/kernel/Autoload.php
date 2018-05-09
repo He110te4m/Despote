@@ -23,9 +23,11 @@ class AutoLoad
      */
     public static function register()
     {
-        // 加载映射表
+        // 加载配置文件中的 类 <=> 文件映射表
         self::$classMap = require PATH_CONF . 'autoload.php';
+        // 注册 PSR4 自动加载
         spl_autoload_register(['\despote\kernel\AutoLoad', 'loadByPSR4']);
+        // 注册根据配置文件自动加载
         spl_autoload_register(['\despote\kernel\AutoLoad', 'loadByConf']);
     }
 
@@ -35,7 +37,7 @@ class AutoLoad
      */
     private static function loadByPSR4($class)
     {
-        // 如果已经加载了就跳过，第二个参数必须设置为 false，否则会自动尝试加载这个类，而这个类文件没有包含进来，所以肯定会出错
+        // 如果已经加载了就跳过，第二个参数必须设置为 false，否则会自动尝试加载这个类，而这个类文件没有包含进来，会调用自动加载函数，从而造成死循环
         if (class_exists($class, false)) {
             return;
         }
@@ -57,18 +59,18 @@ class AutoLoad
      */
     private static function loadByConf($class)
     {
-        // 如果已经加载了就跳过，第二个参数必须设置为 false，否则会自动尝试加载这个类，而这个类文件没有包含进来，所以肯定会出错
+        // 如果已经加载了就跳过，第二个参数必须设置为 false，否则会自动尝试加载这个类，而这个类文件没有包含进来，会调用自动加载函数，从而造成死循环
         if (class_exists($class, false)) {
             return;
         }
 
-        // 遍历数组
-        foreach (self::$classMap as $className => $filePath) {
+        // 遍历内置映射表
+        foreach (self::$classMap as $name => $path) {
             // 判断是否是需要加载的类
-            if ($class === $className) {
+            if ($class === $name) {
                 // 判断文件是否存在，存在则加载并结束函数调用
-                if (is_file($filePath)) {
-                    require $filePath;
+                if (is_file($path)) {
+                    require $path;
                     return;
                 }
             }

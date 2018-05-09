@@ -14,6 +14,7 @@
 namespace despote\kernel;
 
 use \despote\base\Service;
+use \Despote;
 
 class Lock extends Service
 {
@@ -25,14 +26,14 @@ class Lock extends Service
         // 校验路径是否设置
         empty($this->path) && $this->path = PATH_LOCK;
         // 校验路径是否存在
-        is_dir($this->path) || \Despote::file()->create($this->path, true);
+        is_dir($this->path) || Despote::file()->create($this->path, true);
     }
 
     /**
      * 加锁后执行代码，需要将代码封装在函数中，函数执行完自动释放锁
      * @param  String   $key  这段代码标识符，用于多个锁的情况
      * @param  callable $call 需要加锁执行的代码
-     * @param  integer  $type 锁类型，默认为 LOCK_EX，独占锁，可选值：
+     * @param  Integer  $type 锁类型，默认为 LOCK_EX，独占锁，可选值：
      *                        共享锁：LOCK_SH
      *                        独占锁：LOCK_EX
      *                        非阻塞共享锁：LOCK_SH | LOCK_NB（Windows 下无效）

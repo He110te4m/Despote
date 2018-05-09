@@ -58,6 +58,9 @@ class Curl extends Service
     // cURL 错误信息
     private $errmsg;
 
+    /**
+     * 初始化函数，拷贝默认配置
+     */
     public function init()
     {
         $this->setting = $this->options;
@@ -70,7 +73,7 @@ class Curl extends Service
 
     /**
      * 防止单例并发下出现问题，可使用此方法创建另一个实例再继续操作
-     * @return Object Curl 对象
+     * @return Object cURL 对象
      */
     public function create()
     {
@@ -120,7 +123,7 @@ class Curl extends Service
             // 提交 cURL 请求地址并执行 cURL
             $this->setOpt(CURLOPT_URL, $url)->commit();
         } else {
-            trigger_error('无效 URL', E_USER_ERROR);
+            throw new Exception("无效 URL", 500);
         }
 
         return $this;
@@ -157,7 +160,7 @@ class Curl extends Service
             // 提交 cURL 请求地址并执行 cURL
             $this->setOpt(CURLOPT_URL, $url)->commit();
         } else {
-            trigger_error('无效 URL', E_USER_ERROR);
+            throw new Exception("无效 URL", 500);
         }
 
         return $this;
@@ -197,7 +200,8 @@ class Curl extends Service
         if (isset($this->data)) {
             // 判断之前请求是否出错
             if ($this->errno) {
-                trigger_error($this->errmsg, E_USER_ERROR);
+                throw new Exception($this->errmsg, 500);
+
             }
             // 判断文件目录是否存在
             $path = dirname($file);
@@ -210,12 +214,17 @@ class Curl extends Service
                     // 如果未创建手动创建
                     $obj = new File();
                 }
-                $obj->cerate($path, true) || trigger_error('文件路径不存在', E_USER_ERROR);
+
+                // 如果创建失败抛出异常
+                if ($obj->create($path, false) === false) {
+                    throw new Exception("文件路径不存在", 1);
+                }
             }
 
             file_put_contents($file, $this->data, LOCK_EX);
         } else {
-            trigger_error('未发起任何请求，没有可以保存的内容', E_USER_ERROR);
+            throw new Exception("未发起任何请求，没有可以保存的内容", 500);
+
         }
 
         return $this;

@@ -35,7 +35,7 @@ class Cookie extends Service
      * 添加 cookie，如果存在则不添加
      * @param String  $key    cookie 的键名
      * @param Mixed   $value  cookie 的键值
-     * @param integer $expire cookie 的过期时间
+     * @param Integer $expire cookie 的过期时间
      */
     public function add($key, $value, $expire = 0)
     {
@@ -46,7 +46,7 @@ class Cookie extends Service
      * 设置 cookie，如果存在则直接覆盖
      * @param String  $key    cookie 的键名
      * @param Mixed   $value  cookie 的键值
-     * @param integer $expire cookie 的过期时间
+     * @param Integer $expire cookie 的过期时间
      */
     public function set($key, $value, $expire = 0)
     {
@@ -63,18 +63,20 @@ class Cookie extends Service
 
     /**
      * 获取 cookie 的值
-     * @param  String $key cookie 的键名
-     * @return Mixed       cookie 的键值
+     * @param  String $key      cookie 的键名
+     * @param  String $default  cookie 不存在时返回的值，默认为 null
+     * @return Mixed            cookie 的键值
      */
-    public function get($key)
+    public function get($key, $default = null)
     {
-        // 如果没有设置 cookie 则返回 null
+        // 如果没有设置 cookie 则返回默认值
         if (!isset($_COOKIE[$key])) {
-            return null;
+            return $default;
         }
 
         // 获取 cookie 中存放的值
         $value = $_COOKIE[$key];
+        // 开启安全模式则先解密
         if ($this->safe) {
             $value = Utils::decrypt($value, $this->key);
             $value = unserialize($value);
@@ -96,7 +98,7 @@ class Cookie extends Service
     /**
      * 判断 cookie 是否存在
      * @param  String  $key cookie 的键名
-     * @return boolean      cookie 是否存在
+     * @return Boolean      cookie 是否存在
      */
     public function has($key)
     {

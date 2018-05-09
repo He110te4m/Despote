@@ -20,8 +20,8 @@ class File extends Service
     /**
      * 创建文件或目录
      * @param  String  $file  文件绝对地址(目录属于特殊文件)
-     * @param  boolean $isDir 是否是目录，默认为 false
-     * @param  integer $mode  文件权限
+     * @param  Boolean $isDir 是否是目录，默认为 false
+     * @param  Integer $mode  文件权限
      * @return Boolean        创建成功返回 true，创建失败返回 false
      */
     public function create($file, $isDir = false, $mode = 0775)
@@ -54,7 +54,7 @@ class File extends Service
      * 获取文件指定行数内容
      * @param  String $file 文件绝对路径
      * @param  Mixed  $line 读取单行传入行数，读取连续多行传入数组，如：[1, 100]
-     * @param  string $mode 文件读取模式，默认为 rb
+     * @param  String $mode 文件读取模式，默认为 rb
      * @return Mixed        读取单行返回字符串，读取多行返回字符串数组
      */
     public function getLine($file, $line, $mode = 'rb')
