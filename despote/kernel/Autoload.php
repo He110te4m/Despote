@@ -32,6 +32,23 @@ class AutoLoad
     }
 
     /**
+     * 注册自动加载特殊类
+     * @param   String   $class  需要自动加载的类名
+     * @param   String   $path   类文件所在的文件路径
+     * @return  Boolean          注册成功返回 true，否则返回 false
+     */
+    public static function regClass ($class, $path) {
+        if (is_string($class) && is_string($path)) {
+            self::$classMap[$class] = $path;
+            $result = true;
+        } else {
+            $result = false;
+        }
+
+        return $result;
+    }
+
+    /**
      * 根据 PSR4 自动加载类
      * @param  String $class 类名
      */

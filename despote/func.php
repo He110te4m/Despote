@@ -38,7 +38,17 @@ function gm($title = 'Core')
  */
 function c($name, $defaultValue = '')
 {
-    empty(Utils::$config) && Utils::$config = require PATH_CONF . 'config.php';
+    empty(\Utils::$config) && \Utils::$config = require PATH_CONF . 'config.php';
 
-    return isset(Utils::$config[$name]) ? Utils::$config[$name] : $defaultValue;
+    return isset(\Utils::$config[$name]) ? \Utils::$config[$name] : $defaultValue;
+}
+
+/**
+ * 注册自动加载特殊类
+ * @param   String   $class  需要自动加载的类名
+ * @param   String   $path   类文件所在的文件路径
+ * @return  Boolean          注册成功返回 true，否则返回 false
+ */
+function rc($class, $path) {
+    return \Autoload::regClass($class, $path);
 }

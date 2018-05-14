@@ -31,7 +31,7 @@ class Model extends Service
         // 生成 Model 类名
         $class = APP . $router->getModule() . '\model\\' . ucfirst($modelName);
 
-        // 反射获取 Medel 的对象
+        // 反射获取 Model 的对象
         try {
             $obj = new $class();
         } catch (Exception $e) {
