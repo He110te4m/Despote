@@ -27,6 +27,8 @@ class Router extends Service
     protected $controller = 'Index';
     // 内置默认方法
     protected $action = 'index';
+    // 内置默认后缀名
+    protected $suffix = 'html';
     // 是否进行模块绑定，绑定后只能使用设置好的模块进行访问，也就是单模块模式，路径直接填写：控制器/方法，即可
     // 如果不进行绑定，需要填写完整的路径：模块/控制器/方法
     protected $bindModule = false;
@@ -67,7 +69,12 @@ class Router extends Service
         // 过滤后缀，伪静态设置
         $suffix = Despote::file()->getSuffix($path);
         if (!empty($suffix)) {
-            $path = rtrim(preg_replace('/.' . $suffix . '$/i', '', $path, 1), '/');
+            if ($this->suffix == '' || $suffix == $this->suffix) {
+                $path = rtrim(preg_replace('/.' . $suffix . '$/i', '', $path, 1), '/');
+            } else {
+                throw new Exception('URL 解析失败，请确认伪静态配置是否正确', 500);
+                die;
+            }
         }
 
         // 路由匹配
@@ -125,7 +132,7 @@ class Router extends Service
             if (Utils::config('debug', false)) {
                 throw new Exception("{$this->getModule()} 模块中的 {$this->getCtrl()} 控制器中的 {$this->getAction()} 方法调用失败。调用的 URI 为：{$http->getUri()}", 1);
             }
-
+            die;
         }
         $func = $obj->getMethod($this->getAction());
 
@@ -143,5 +150,21 @@ class Router extends Service
             call_user_func_array([new $class(), $this->getAction()], $params);
             Event::trigger('AFTER_ACTION');
         }
+    }
+
+    public function createUrl($ctrl = 'Index', $action = 'index', $params = [], $module = 'Home')
+    {
+        if (file_exists(PATH_ROOT . $ctrl)) {
+            $uri = Despote::request()->getHost(true) . '/' . $ctrl;
+        } else {
+            $uri    = Despote::request()->getHost(true);
+            $params = empty($params) ? '' : '?' . http_build_query($params);
+
+            empty($this->suffix) || $action = $action . '.' . $this->suffix;
+
+            $uri .= '/' . $module . '/' . $ctrl . '/' . $action . $params;
+        }
+
+        return $uri;
     }
 }

@@ -52,3 +52,7 @@ function c($name, $defaultValue = '')
 function rc($class, $path) {
     return \Autoload::regClass($class, $path);
 }
+
+function url($ctrl = 'Index', $action = 'index', $params = [], $module = 'Home') {
+    return \Despote::createUrl($ctrl, $action, $params, $module);
+}
