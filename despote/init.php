@@ -20,8 +20,8 @@ define('APP', 'app');
 
 // 根目录
 define('PATH_ROOT', dirname(__DIR__) . DS);
-// 子目录
-define('PATH_CHILD', 'first');
+// 子目录配置
+define('PATH_CHILD', '');
 
 // 框架目录
 define('PATH_DESPOTE', PATH_ROOT . 'despote' . DS);

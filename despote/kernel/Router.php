@@ -81,17 +81,20 @@ class Router extends Service
         $pathInfo = empty($path) ? [] : explode('/', $path);
 
         // 子目录支持
-        $childDir = ltrim(PATH_CHILD, '/');
-        $childDirs = explode('/', $childDir);
-        $i = 0;
-        while(!empty($childDirs)) {
-            if ($pathInfo[$i] == $childDirs[$i]) {
-                array_shift($pathInfo);
-                array_shift($childDirs);
-                ++$i;
-            } else {
-                throw new Exception('子目录解析失败，请检查子目录配置', 500);
-                die;
+        $path_child = PATH_CHILD;
+        if (!empty($path_child)) {
+            $childDir = ltrim($path_child, '/');
+            $childDirs = explode('/', $childDir);
+            $i = 0;
+            while(!empty($childDirs)) {
+                if ($pathInfo[$i] == $childDirs[$i]) {
+                    array_shift($pathInfo);
+                    array_shift($childDirs);
+                    ++$i;
+                } else {
+                    throw new Exception('子目录解析失败，请检查子目录配置', 500);
+                    die;
+                }
             }
         }
 
