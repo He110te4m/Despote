@@ -81,11 +81,13 @@ class Router extends Service
         $pathInfo = empty($path) ? [] : explode('/', $path);
 
         // 子目录支持
-        $path_child = PATH_CHILD;
+        $path_child = defined('PATH_CHILD') ? PATH_CHILD : '';
+        // 判断是否需要进行子目录解析，提高效率
         if (!empty($path_child)) {
             $childDir = ltrim($path_child, '/');
             $childDirs = explode('/', $childDir);
             $i = 0;
+            // 校验子目录是否匹配并处理子目录支持
             while(!empty($childDirs)) {
                 if ($pathInfo[$i] == $childDirs[$i]) {
                     array_shift($pathInfo);
