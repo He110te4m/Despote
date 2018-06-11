@@ -80,6 +80,21 @@ class Router extends Service
         // 路由匹配
         $pathInfo = empty($path) ? [] : explode('/', $path);
 
+        // 子目录支持
+        $childDir = ltrim(PATH_CHILD, '/');
+        $childDirs = explode('/', $childDir);
+        $i = 0;
+        while(!empty($childDirs)) {
+            if ($pathInfo[$i] == $childDirs[$i]) {
+                array_shift($pathInfo);
+                array_shift($childDirs);
+                ++$i;
+            } else {
+                throw new Exception('子目录解析失败，请检查子目录配置', 500);
+                die;
+            }
+        }
+
         // 当 URL 参数少于三个，则必定是 domain/controller/action 这种形式，所以直接使用默认模块
         // 当 URL 参数大于等于三个，必定是传参或者是 domain/moduel/controller/action，为了规范，当需要传参是时候，必须编写完整 URL，或者使用 get/post 传参
         $module     = (count($pathInfo) < 3) ? $this->module : ($this->bindModule ? $this->module : array_shift($pathInfo));
@@ -90,7 +105,7 @@ class Router extends Service
         while ($pathInfo) {
             $key = array_shift($pathInfo);
             $val = array_shift($pathInfo);
-            // 防止参数个数为奇数，即只有键名没有键值的情况
+            // 防止参数个数为奇数，即只有键名没有键值的情况，故不使用 array_merge
             $_GET[$key] = $val === null ? '' : $val;
         }
 
@@ -103,27 +118,42 @@ class Router extends Service
         Despote::request()->load($_GET);
     }
 
+    /**
+     * 获取当前使用的 Module
+     * @return  String  当前使用的模块名
+     */
     public function getModule()
     {
         return isset($this->router['module']) ? $this->router['module'] : $this->module;
     }
 
+    /**
+     * 获取当前使用的 Ctroller
+     * @return  String  当前使用的控制器名
+     */
     public function getCtrl()
     {
         return isset($this->router['controller']) ? $this->router['controller'] : $this->controller;
     }
 
+    /**
+     * 获取当前使用的 Action
+     * @return  String  当前使用的动作名
+     */
     public function getAction()
     {
         return isset($this->router['action']) ? $this->router['action'] : $this->action;
     }
 
+    /**
+     * 加载控制器
+     */
     public function loadCtrl()
     {
         $http = Despote::request();
 
         // 获取控制器对应的类
-        $class = APP . $this->getModule() . '\controller\\' . $this->getCtrl();
+        $class = '\\' . APP . '\\' . $this->getModule() . '\\controller\\' . $this->getCtrl();
 
         // 反射获取 action 的参数并将值存在数组中
         try {
@@ -145,21 +175,36 @@ class Router extends Service
 
         // 判断是否为公有可调用的 Action
         if ($func->isPublic()) {
+            // 中间件支持
             Event::trigger('BEFORE_ACTION');
             // 实例化控制器并调用 action
             call_user_func_array([new $class(), $this->getAction()], $params);
+            // 中间件支持
             Event::trigger('AFTER_ACTION');
         }
     }
 
+    /**
+     * 根据资源生成 URL
+     *
+     * @param   String  $ctrl    加载的控制器或文件于根目录的相对地址
+     * @param   String  $action  加载的动作
+     * @param   Array   $params  加载的参数
+     * @param   String  $module  加载的模块
+     * @return  String           返回生成的 URL
+     */
     public function createUrl($ctrl = 'Index', $action = 'index', $params = [], $module = 'Home')
     {
         if (file_exists(PATH_ROOT . $ctrl)) {
+            // 如果文件存在，则静态链接
             $uri = Despote::request()->getHost(true) . '/' . $ctrl;
         } else {
-            $uri    = Despote::request()->getHost(true);
+            // 如果文件不存在，根据路由规则生成
+            $uri = Despote::request()->getHost(true);
+            // 参数配置
             $params = empty($params) ? '' : '?' . http_build_query($params);
 
+            // 后缀绑定设置
             empty($this->suffix) || $action = $action . '.' . $this->suffix;
 
             $uri .= '/' . $module . '/' . $ctrl . '/' . $action . $params;

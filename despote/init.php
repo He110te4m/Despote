@@ -16,10 +16,12 @@ define('DS', DIRECTORY_SEPARATOR);
 // 静态资源相对路径
 define('RES', '/static/');
 // 模块所在目录
-define('APP', '\app\\');
+define('APP', 'app');
 
 // 根目录
 define('PATH_ROOT', dirname(__DIR__) . DS);
+// 子目录
+define('PATH_CHILD', 'first');
 
 // 框架目录
 define('PATH_DESPOTE', PATH_ROOT . 'despote' . DS);
