@@ -72,9 +72,11 @@ class Router extends Service
         parse_str(isset($urlInfo['query']) ? $urlInfo['query'] : '', $_GET);
 
         // 尝试匹配特殊路由
-        if (array_key_exists('/' . $path, $this->binds)) {
-            $this->router = '/' . $path;
-            return;
+        if (!empty($this->binds)) {
+            if (array_key_exists('/' . $path, $this->binds)) {
+                $this->router = '/' . $path;
+                return;
+            }
         }
 
         // 过滤后缀，伪静态设置
@@ -237,5 +239,34 @@ class Router extends Service
         }
 
         return $uri;
+    }
+
+    /**
+     * 新增特殊路由
+     * @param   String   $uri     路由 URI
+     * @param   String   $ctrl    路由调用的类名
+     * @param   String   $action  路由调用的类方法
+     * @return  Boolean           新增结果，新增成功返回 true，否则返回 false
+     */
+    public function addRouter($uri, $ctrl, $action) {
+        if (isset($this->binds[$uri])) {
+            return false;
+        }
+
+        $this->binds[$uri] = [
+            'ctrl'   => $ctrl,
+            'action' => $action,
+        ];
+
+        return true;
+    }
+
+    /**
+     * 删除特殊路由
+     * @param   String   $uri  需要删除的路由 URI
+     * @return  Boolean        删除结果，成功返回 true，失败返回 false
+     */
+    public function delRouter($uri) {
+        return isset($this->binds[$uri]) && unsset($this->binds[$uri]);
     }
 }
