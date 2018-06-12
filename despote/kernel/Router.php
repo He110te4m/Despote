@@ -222,6 +222,8 @@ class Router extends Service
         if (file_exists(PATH_ROOT . $ctrl)) {
             // 如果文件存在，则静态链接
             $uri = Despote::request()->getHost(true) . '/' . $ctrl;
+        } else if (in_array(['ctrl' => $ctrl, 'action' => $action], $this->binds)) {
+            return array_search(['ctrl' => $ctrl, 'action' => $action], $this->binds);
         } else {
             // 如果文件不存在，根据路由规则生成
             $uri = Despote::request()->getHost(true);

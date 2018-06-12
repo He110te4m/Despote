@@ -54,5 +54,5 @@ function rc($class, $path) {
 }
 
 function url($ctrl = 'Index', $action = 'index', $params = [], $module = 'Home') {
-    return \Despote::createUrl($ctrl, $action, $params, $module);
+    return \Despote::router()->createUrl($ctrl, $action, $params, $module);
 }
