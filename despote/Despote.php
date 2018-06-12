@@ -68,6 +68,7 @@ class Despote
         $core = [
             'request'   => '\despote\kernel\Request',
             'router'    => '\despote\kernel\Router',
+            'encrypt'    => '\despote\kernel\Encrypt',
             'fileCache' => [
                 'class' => '\despote\kernel\cache\FileCache',
                 // 缓存路径

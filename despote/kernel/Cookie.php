@@ -13,9 +13,9 @@
 
 namespace despote\kernel;
 
+use \Despote;
 use \despote\base\Service;
 use \Exception;
-use \Utils;
 
 class Cookie extends Service
 {
@@ -54,7 +54,7 @@ class Cookie extends Service
             // 只能加密字符串，所以先序列化
             $value = serialize($value);
             // 加密字符串
-            $value = Utils::encrypt($value, $this->key, $expire);
+            $value = Despote::encrypt()->encode($value, $this->key, $expire);
         }
         // 设置 cookie
         $expire += time();
@@ -78,7 +78,7 @@ class Cookie extends Service
         $value = $_COOKIE[$key];
         // 开启安全模式则先解密
         if ($this->safe) {
-            $value = Utils::decrypt($value, $this->key);
+            $value = Despote::encrypt()->decode($value, $this->key);
             $value = unserialize($value);
         }
 
