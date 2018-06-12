@@ -29,7 +29,7 @@ class Model extends Service
         $router = Despote::router();
 
         // 生成 Model 类名
-        $class = APP . $router->getModule() . '\model\\' . ucfirst($modelName);
+        $class = APP . '\\' . $router->getModule() . '\\model\\' . ucfirst($modelName);
 
         // 反射获取 Model 的对象
         try {
