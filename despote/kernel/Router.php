@@ -36,12 +36,17 @@ class Router extends Service
     protected $host = [];
     // 现在的路由信息
     protected $router = [];
+    // 绑定的特殊路由，形式为：用于匹配的 URL => 真实 URL，仅支持 get/post 传参
+    protected $binds = [];
 
     /**
      * 初始化函数，开始校验与解析 URL
      */
     protected function init()
     {
+        // 如果特殊路由配置文件存在则加载特殊路由配置
+        file_exists(PATH_CONF . 'router.php') && $this->binds = require(PATH_CONF . 'router.php');
+
         $host = Despote::request()->getHost();
         if (!empty($this->host) && !isset($this->host[$host])) {
             // 域名绑定校验
@@ -65,6 +70,12 @@ class Router extends Service
         $path = trim(preg_replace('/^(\/)?index\.php/i', '', $path, 1), '/');
         // 获取 GET 参数
         parse_str(isset($urlInfo['query']) ? $urlInfo['query'] : '', $_GET);
+
+        // 尝试匹配特殊路由
+        if (array_key_exists('/' . $path, $this->binds)) {
+            $this->router = '/' . $path;
+            return;
+        }
 
         // 过滤后缀，伪静态设置
         $suffix = Despote::file()->getSuffix($path);
@@ -157,19 +168,27 @@ class Router extends Service
     {
         $http = Despote::request();
 
-        // 获取控制器对应的类
-        $class = '\\' . APP . '\\' . $this->getModule() . '\\controller\\' . $this->getCtrl();
+        // 根据路由类型初始化 Controller 和 Action
+        if(is_array($this->router)) {
+            // 开始正常 MVC 初始化
+            $class = '\\' . APP . '\\' . $this->getModule() . '\\controller\\' . $this->getCtrl();
+            $action = $this->getAction();
+        } else {
+            // 开始特殊路由初始化
+            $class = $this->binds[$this->router]['ctrl'];
+            $action = $this->binds[$this->router]['action'];
+        }
 
         // 反射获取 action 的参数并将值存在数组中
         try {
             $obj = new \ReflectionClass($class);
         } catch (Exception $e) {
             if (Utils::config('debug', false)) {
-                throw new Exception("{$this->getModule()} 模块中的 {$this->getCtrl()} 控制器中的 {$this->getAction()} 方法调用失败。调用的 URI 为：{$http->getUri()}", 1);
+                throw new Exception("{$class} 控制器中的 {$action} 方法调用失败。调用的 URI 为：{$http->getUri()}", 1);
             }
             die;
         }
-        $func = $obj->getMethod($this->getAction());
+        $func = $obj->getMethod($action);
 
         // 装载 Action 参数，兼容 Action 传参
         $params = [];
@@ -183,7 +202,7 @@ class Router extends Service
             // 中间件支持
             Event::trigger('BEFORE_ACTION');
             // 实例化控制器并调用 action
-            call_user_func_array([new $class(), $this->getAction()], $params);
+            call_user_func_array([new $class(), $action], $params);
             // 中间件支持
             Event::trigger('AFTER_ACTION');
         }
