@@ -75,6 +75,10 @@ class Utils
         return array_keys($arr) !== range(0, count($arr) - 1);
     }
 
+    ////////////
+    // ID 相关 //
+    ////////////
+
     /**
      * 获取 uuid（通用唯一标识符）
      * @param   String  $prefix  uuid 的前缀
@@ -86,6 +90,19 @@ class Utils
         $uuid   = substr($charid, 0, 8) . $prefix . substr($charid, 8, 4) . $prefix . substr($charid, 12, 4) . $prefix . substr($charid, 16, 4) . $prefix . substr($charid, 20, 12);
 
         return $uuid;
+    }
+
+    /**
+     * 获取订单号
+     * @param   Integer  $startYear  开始年份，默认为 2018
+     * @return  Array                 每隔 n 年代表的字母，索引数组
+     */
+    public function getOrderId($startYear = 2018, array $yearCode = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'])
+    {
+        // 使用字母代表年份 + 月份的大写 16 进制值 + 当前月第几天 + 时间戳最后五位数 + 三位毫秒 + 两位微秒 + 两位随机数
+        $orderId = $yearCode[intval(date('Y')) - $startYear] . strtoupper(dechex(date('m'))) . date('d') . substr(time(), -5) . substr(microtime(), 2, 5) . sprintf('%02d', rand(0, 99));
+
+        return $orderId;
     }
 
     /////////////
