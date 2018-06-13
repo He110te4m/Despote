@@ -65,7 +65,7 @@ class File extends Service
             // 需要读取的文件内容
             $content = [];
             // 初始化相关变量
-            $startLine = $line[0] >= 0 ? $line[0] : 0;
+            $startLine = $line[0] >= 0 ? $line[0] : 1;
             $endLine   = $line[count($line) - 1];
             $count     = $endLine - $startLine;
 

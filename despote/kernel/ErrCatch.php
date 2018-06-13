@@ -69,6 +69,13 @@ EOF;
         }
     }
 
+    /**
+     * 错误处理
+     * @param  Integer   $errno    错误码
+     * @param  String    $errstr   错误信息
+     * @param  String    $errfile  发生错误的文件
+     * @param  Integger  $errline  发生错误的行
+     */
     public function onError($errno, $errstr, $errfile, $errline)
     {
         $debug = Utils::config('error_catch', true);
@@ -85,7 +92,6 @@ EOF;
 
     /**
      * 当程序停止运行时调用，尝试捕获错误
-     * @return [type] [description]
      */
     public function onShutdown()
     {
@@ -105,7 +111,7 @@ EOF;
      * @param  String  $type    错误的类型，是 Error 还是 Exception
      * @param  String  $errstr  错误类型
      * @param  String  $errfile 错误发生的文件的绝对路径
-     * @param  integer $errline 错误发生的行数
+     * @param  Integer $errline 错误发生的行数
      */
     private function display($type, $errstr, $errfile, $errline)
     {
@@ -124,10 +130,10 @@ EOF;
     <ul style="list-style: none; padding: 5px 10px; margin: 0; font-size: 16px; background-color: #000; color: #fff;">
         <li>Despote Framework [Version 3.0]. Copyright (c) 2017 He110. All rights reserved.</li>
         <li>Copyright (c) 2017 He110. All rights reserved.</li>
-        <li style="color: green;">[root@He110 ~] $type Code ：$code </li>
-        <li style="color: red;">[root@He110 ~] $type Info ：$errstr </li>
-        <li style="color: blue;">[root@He110 ~] $type File ：$errfile </li>
-        <li style="color: yellow;">[root@He110 ~] $type Line ：$errline </li>
+        <li style="color: green;">[root@He110 ~] $type Code ：<b>$code</b> </li>
+        <li style="color: red;">[root@He110 ~] $type Info ：<b>$errstr</b> </li>
+        <li style="color: blue;">[root@He110 ~] $type File ：<b>$errfile</b> </li>
+        <li style="color: yellow;">[root@He110 ~] $type Line ：<b>$errline</b> </li>
         <li>&nbsp;</li>
         $trace
     </ul>
