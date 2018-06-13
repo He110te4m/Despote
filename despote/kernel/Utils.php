@@ -14,6 +14,81 @@
 class Utils
 {
     /////////////
+    // 配置加载 //
+    /////////////
+
+    private static $config;
+
+    /**
+     * 初始化环境配置
+     */
+    public static function initConf()
+    {
+        // 屏蔽系统错误提示
+        if (self::config('debug', false) == false) {
+            ini_set('display_errors', 'Off');
+            error_reporting(0);
+        } else {
+            ini_set('display_errors', '1');
+            error_reporting(E_ALL);
+        }
+        // 传参自定义错误处理函数，依次为异常处理函数、错误处理函数、停止响应函数
+        // Event::trigger('ERROR_CATCH_ON', 'onException', 'onError', 'onShutdown');
+
+        $error = self::config('error');
+        if (empty($error)) {
+            Event::trigger('ERROR_CATCH_ON');
+        } else {
+            // 设置异常处理函数
+            $exception = isset($error['exception']) ? $error['exception'] : 'onException';
+            // 设置错误处理函数
+            $error = isset($error['error']) ? $error['error'] : 'onError';
+            // 设置停止响应处理函数
+            $shutdown = isset($error['shutdown']) ? $error['shutdown'] : 'onShutdown';
+            // 设置这些函数所在的类名
+            $class = isset($error['class']) ? $error['class'] : 'this';
+            // 触发事件设置错误处理函数
+            Event::trigger('ERROR_CATCH_ON', $exception, $error, $shutdown, $class);
+        }
+    }
+
+    /**
+     * 获取系统配置信息
+     * @param  String $name         配置名
+     * @param  Mixed  $defaultValue 配置不存在时返回的值，不配置默认返回空字符串
+     * @return Mixed                配置存在时返回配置值，否则返回 defaultValue 的值
+     */
+    public static function config($name, $defaultValue = '')
+    {
+        empty(self::$config) && self::$config = require PATH_CONF . 'config.php';
+
+        return isset(self::$config[$name]) ? self::$config[$name] : $defaultValue;
+    }
+
+    /**
+     * 判断数组是否为关联数组
+     * @param  Array   $arr 需要判断的数组
+     * @return Boolean      关联数组返回 true，索引数组返回 false
+     */
+    public static function isAssoc(array $arr)
+    {
+        return array_keys($arr) !== range(0, count($arr) - 1);
+    }
+
+    /**
+     * 获取 uuid（通用唯一标识符）
+     * @param   String  $prefix  uuid 的前缀
+     * @return  String            生成的 uuid
+     */
+    public function getUuid($prefix = '')
+    {
+        $charid = strtoupper(md5(uniqid(mt_rand(), true)));
+        $uuid   = substr($charid, 0, 8) . $prefix . substr($charid, 8, 4) . $prefix . substr($charid, 12, 4) . $prefix . substr($charid, 16, 4) . $prefix . substr($charid, 20, 12);
+
+        return $uuid;
+    }
+
+    /////////////
     // 资源统计 //
     /////////////
 
@@ -145,63 +220,5 @@ class Utils
     public static function end($str)
     {
         echo '<br>' . $str . '结束<br>';
-    }
-
-    /////////////
-    // 配置加载 //
-    /////////////
-
-    private static $config;
-
-    /**
-     * 初始化环境配置
-     */
-    public static function initConf()
-    {
-        // 屏蔽系统错误提示
-        if (self::config('debug', false) == false) {
-            ini_set('display_errors', 'Off');
-            error_reporting(0);
-        } else {
-            ini_set('display_errors', '1');
-            error_reporting(E_ALL);
-        }
-        Event::trigger('ERROR_CATCH_ON');
-    }
-
-    /**
-     * 获取系统配置信息
-     * @param  String $name         配置名
-     * @param  Mixed  $defaultValue 配置不存在时返回的值，不配置默认返回空字符串
-     * @return Mixed                配置存在时返回配置值，否则返回 defaultValue 的值
-     */
-    public static function config($name, $defaultValue = '')
-    {
-        empty(self::$config) && self::$config = require PATH_CONF . 'config.php';
-
-        return isset(self::$config[$name]) ? self::$config[$name] : $defaultValue;
-    }
-
-    /**
-     * 判断数组是否为关联数组
-     * @param  Array   $arr 需要判断的数组
-     * @return Boolean      关联数组返回 true，索引数组返回 false
-     */
-    public static function isAssoc(array $arr)
-    {
-        return array_keys($arr) !== range(0, count($arr) - 1);
-    }
-
-    /**
-     * 获取 uuid（通用唯一标识符）
-     * @param   String  $prefix  uuid 的前缀
-     * @return  String            生成的 uuid
-     */
-    public function getUuid($prefix = '')
-    {
-        $charid = strtoupper(md5(uniqid(mt_rand(), true)));
-        $uuid   = substr($charid, 0, 8) . $prefix . substr($charid, 8, 4) . $prefix . substr($charid, 12, 4) . $prefix . substr($charid, 16, 4) . $prefix . substr($charid, 20, 12);
-
-        return $uuid;
     }
 }

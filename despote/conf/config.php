@@ -11,7 +11,20 @@
  */
 
 return [
-    'error_catch' => 1,
+    // 是否开启错误捕获
+    'error_catch' => true,
+    // // 错误捕获相关配置
+    // 'error'       => [
+    //     // 错误捕获函数所在的类，如果是默认留空或者填 this
+    //     'class'     => 'this',
+    //     // 异常处理方法名
+    //     'exception' => '',
+    //     // 错误处理方法名
+    //     'error'     => '',
+    //     // 停止响应方法名
+    //     'shutdown'  => '',
+    // ],
+    // 是否开启 debug 模式
     'debug'       => true,
     'sys_info'    => 'Despote 3.0',
 ];

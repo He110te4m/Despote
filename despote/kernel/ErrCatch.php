@@ -15,19 +15,34 @@ namespace despote\kernel;
 use \Despote;
 use \despote\base\Service;
 use \Event;
+use \Exception;
 use \Utils;
 
 class ErrCatch extends Service
 {
-    public static function register()
+    public static function register($exception = 'onException', $error = 'onError', $shutdown = 'onShutdown', $class = 'this')
     {
-        $obj = new static;
+        // 兼容处理
+        empty($exception) && $exception = 'onException';
+        empty($error) && $error = 'onError';
+        empty($shutdown) && $shutdown = 'onShutdown';
+
+        if ($class == 'this') {
+            $obj = new static;
+        } else {
+            try {
+                $obj = new $class;
+            } catch (Exception $e) {
+                die('注册错误处理方式时出错，请检查错误处理配置');
+            }
+        }
+
         // 自定义异常处理
-        set_exception_handler([$obj, 'onException']);
+        set_exception_handler([$obj, $exception]);
         // 自定义错误处理
-        set_error_handler([$obj, 'onError']);
+        set_error_handler([$obj, $error]);
         // 自定义致命错误处理
-        register_shutdown_function([$obj, 'onShutdown']);
+        register_shutdown_function([$obj, $shutdown]);
     }
 
     public static function unregister()
