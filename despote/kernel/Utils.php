@@ -238,4 +238,78 @@ class Utils
     {
         echo '<br>' . $str . '结束<br>';
     }
+
+    //////////////
+    // 高并发工具 //
+    //////////////
+
+    /**
+     * 高并发通过接口获取 Token
+     *
+     * @param   String    $sign  Token 标识，用于设置缓存
+     * @param   Callback  $call  回调函数，用于请求 Token，该函数需返回含有 token 和 expire
+     *                             两个字段的关联数组
+     * @return  String            成功获取返回 Token，失败返回用户回调函数返回值
+     */
+    public static function getToken($sign, callback $call)
+    {
+        $key   = md5($sign);
+        $cache = Despote::fileCache()->get($key);
+
+        try {
+            $lock = Despote::lock();
+        } catch (Exception $e) {
+            $lock = new \despot\kernel\Lock();
+        }
+
+        if (isset($cache['expire'])) {
+            if ($cache['expire'] > time()) {
+                // token 还没过期，直接返回
+                $token = $cache['token'];
+            } else {
+                // 加锁使用闭包获取 token
+                $res = $lock->run($key, function () use ($key, $call) {
+                    $fileCache = Despote::fileCache();
+
+                    // 加锁后尝试获取缓存数据
+                    $cache = $fileCache->get($key);
+                    if (isset($cache['expire']) && $cache['expire'] > time()) {
+                        return $cache;
+                    }
+
+                    // 获取不到，则调用回调获取（必须返回关联数组，包含 token 和 expire 两个字段）
+                    $cache = call_user_func($call);
+
+                    // 校验格式通过设置缓存
+                    if (isset($cache['token']) && isset($cache['expire'])) {
+                        $fileCache->set($key, $cache['token'], $cache['expire']);
+                    }
+
+                    return isset($cache['token']) ? $cache['token'] : $cache;
+                }, LOCK_EX);
+            }
+        } else {
+            $token = $lock->run($key, function () use ($key, $call) {
+                $fileCache = Despote::fileCache();
+
+                // 加锁后尝试获取缓存数据
+                $cache = $fileCache->get($key);
+                if (isset($cache['expire']) && $cache['expire'] > time()) {
+                    return $cache;
+                }
+
+                // 获取不到，则调用回调获取（必须返回关联数组，包含 token 和 expire 两个字段）
+                $cache = call_user_func($call);
+
+                // 校验格式通过设置缓存
+                if (isset($cache['token']) && isset($cache['expire'])) {
+                    $fileCache->set($key, $cache['token'], $cache['expire']);
+                }
+
+                return isset($cache['token']) ? $cache['token'] : $cache;
+            }, LOCK_EX);
+        }
+
+        return $token;
+    }
 }

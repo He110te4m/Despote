@@ -40,16 +40,20 @@ class Lock extends Service
      *                        非阻塞独占锁：LOCK_EX | LOCK_NB（Windows 下无效）
      * @return Mixed          成功返回函数执行结果，失败返回 false
      */
-    public function lock($key, callable $call, $type = LOCK_SH)
+    public function run($key, callable $call, $type = LOCK_SH)
     {
+        // 读取操作对应的锁文件
         if ($fp = @fopen($this->path . DS . md5($key), 'w')) {
+            // 尝试加锁
             if (@flock($fp, $type)) {
+                // 调用回调函数执行需要加锁的代码
                 $res = call_user_func($call);
+                // 解锁
                 @flock($fp, LOCK_UN);
             }
         }
+        // 关闭文件
         @fclose($fp);
-        @unlink($this->path . DS . md5($key));
 
         return isset($res) ? $res : false;
     }
