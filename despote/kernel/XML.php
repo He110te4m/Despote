@@ -70,6 +70,10 @@ class XML extends Service
         return $result;
     }
 
+    /////////////
+    // 获取数据 //
+    /////////////
+
     /**
      * 获取 XML 中某个结点的数据，不会加载整个文档到内存中
      * @param  String $xml          XML 文件路径 或 XML 地址 或 XML 字符串
@@ -106,5 +110,12 @@ class XML extends Service
         }
 
         return $result;
+    }
+
+    public function findNodeByXPath($pattern)
+    {
+        $xml = simplexml_load_file('leapsoulcn.xml');
+
+        return $xml->xpath($pattern);
     }
 }

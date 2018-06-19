@@ -55,21 +55,38 @@ class MonDB extends Service
         // 参数初始化 //
         //////////////
 
-        // MongoDB 服务器地址，必填
-        if (isset($server['host'])) {
-            $host = $server['host'];
+        if (isset($server['cluster'])) {
+            // 集群模式
+
+            foreach ($server['cluster'] as &$item) {
+                if (isset($item['host'])) {
+                    $temp = $item['host'];
+                } else {
+                    $this->error('为正确配置 MongoDB 地址');
+                }
+                isset($server['port']) && $temp .= ':' . $server['port'];
+
+                $item = $temp;
+            }
+            $dsn = implode(',', $server['cluster']);
         } else {
-            $this->error('未正确配置 MongoDB 地址');
+            // MongoDB 服务器地址，必填
+            if (isset($server['host'])) {
+                $dsn = $server['host'];
+            } else {
+                $this->error('未正确配置 MongoDB 地址');
+            }
+            // 端口
+            isset($server['port']) && $dsn .= ':' . $server['port'];
         }
-        // 端口
-        $port = isset($server['port']) ? ':' . $server['port'] : '';
+
         // 数据库名
         isset($server['name']) && $this->db = $server['name'];
         // 集合名
         isset($server['coll']) && $this->collection = $server['coll'];
 
         // 连接 MongoDB
-        $this->manager = new Manager('mongodb://' . $host . $port, $this->opts);
+        $this->manager = new Manager('mongodb://' . $dsn, $this->opts);
     }
 
     /////////////

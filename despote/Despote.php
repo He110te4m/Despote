@@ -24,7 +24,6 @@ class Despote
     {
         // 注册必要事件
         self::initEvent();
-
         // 统计现在的资源占用信息，方便在过程中获取
         Event::trigger('TICK', 'Core');
         // 开始核心方法
