@@ -70,6 +70,16 @@ return [
         // // 模拟预处理，默认为 false
         // 'pretreat' => false,
     ],
+    // MongoDB 操作类
+    'mongo'  => [
+        'class'  => '\despote\kernel\db\MonDB',
+        'server' => [
+            'host' => '192.168.157.129',
+            'port' => 27017,
+            'name' => 'db',
+            'coll' => 'runob',
+        ],
+    ],
     // 日志记录
     'logger' => [
         'class' => '\despote\kernel\Logger',
