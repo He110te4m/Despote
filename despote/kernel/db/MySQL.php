@@ -220,7 +220,7 @@ class MySQL extends Service
         $res = $this->execsql($sql, 'select', $data, $name);
         if ($res === false) {
             throw new \Exception("SQL 语句：{$sql} 查询失败", 500);
-            return;
+            return false;
         }
 
         return $res;
